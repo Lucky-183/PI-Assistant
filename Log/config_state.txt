@@ -1,0 +1,301 @@
+{
+    "timestamp": "2023-10-25 13:36:20",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:36:22",
+    "changed_params": {
+        "MusicPlay": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:36:22",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:36:35",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:36:35",
+    "changed_params": {
+        "MusicPlay": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:36:35",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:36:39",
+    "changed_params": {
+        "wakebyhw": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:36:44",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:38:03",
+    "changed_params": {
+        "MusicPlay": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:38:03",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:39:20",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:39:31",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 13:39:33",
+    "changed_params": {
+        "wakebyhw": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:00:04",
+    "changed_params": {
+        "notify_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:00:08",
+    "changed_params": {
+        "notify_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:05:11",
+    "changed_params": {
+        "wakebyhw": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:05:15",
+    "changed_params": {
+        "wakebyhw": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:05:21",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:05:55",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:15:31",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:16:09",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:17:25",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:18:14",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:18:39",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:18:45",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:27:17",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:28:23",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 14:29:17",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 15:00:00",
+    "changed_params": {
+        "notify_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 15:00:05",
+    "changed_params": {
+        "notify_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:03:36",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:06:53",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:36:29",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:37:22",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:37:50",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:37:50",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:37:59",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:38:26",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:38:32",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:38:32",
+    "changed_params": {
+        "chat_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 16:38:42",
+    "changed_params": {
+        "chat_enable": false
+    }
+}
+
+{
+    "timestamp": "2023-10-25 17:00:01",
+    "changed_params": {
+        "notify_enable": true
+    }
+}
+
+{
+    "timestamp": "2023-10-25 17:00:06",
+    "changed_params": {
+        "notify_enable": false
+    }
+}
+
