@@ -12,6 +12,7 @@ import udpserver
 import schedule
 import tts
 from play import play
+import Scene
 notifyplayer=None
 notifysound=None
 
