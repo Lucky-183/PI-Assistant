@@ -78,7 +78,7 @@ python server.py
 
 连接了指定外设的情况下可通过按钮/无线模块触发，按钮GPIO4高电平触发，无线模块等待后期补充开源。
 
-语音播报功能需要手机端APP配合，APP为MacroDroid，实现过程是APP端发送相应格式的消息到```http://127.0.0.1:5000/words?words=''```，然后TTS播报出来。
+语音播报功能需要手机端APP配合，APP为MacroDroid，实现过程是APP端发送相应格式的消息到```http://语音助手ip:5000/words?words=''```，然后TTS播报出来。
 
 具体的功能可以根据chat.py的执行逻辑以及对应文件查看使用
 
