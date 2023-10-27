@@ -84,7 +84,7 @@ python server.py #主程序
 
 在APP上配置IP后发送消息交互，也可通过```http://语音助手ip:5000/command?words=''```直接进行交互
 
-连接了指定外设的情况下可通过按钮/无线模块触发，按钮GPIO4高电平触发，无线模块等待后期补充开源。
+连接了指定外设的情况下可通过按钮/无线模块触发，按钮GPIO4高电平触发。（无线模块开源链接：https://oshwhub.com/ghgjkh/simple-wake）
 
 语音播报功能需要手机端APP配合，APP为MacroDroid，实现过程是APP端发送相应格式的消息到```http://语音助手ip:5000/words?words=''```，然后TTS播报出来。
 
