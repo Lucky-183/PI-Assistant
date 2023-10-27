@@ -29,11 +29,19 @@
 pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an duckduckgo_search newspaper3k flask SpeechRecognition openai pyaudio
 ```
 
-### Nodejs安装
+### Azure认知服务
+
+为了使用语音识别以及文字转语音，需要注册微软Azure，获取Azure认知服务的APIkey
+
+### GPT服务
+
+为了生成对话文本，需要注册OpenAI账号，并获取APIkey
+
+### Nodejs安装(可选)
 
 为了使用音乐播放功能，需要安装Node.js，安装完成后可在QQMusicApi路径下运行```npm start``` 测试结果（具体使用可参考[QQMusicApi文档站](https://jsososo.github.io/QQMusicApi/#/?id=qqmusicapi)以及if_music.py）
 
-### Mysql数据库安装
+### Mysql数据库安装(可选)
 
 为了实现日程提醒功能，需要安装Mysql数据库，安装并后台运行，对应schedule.py文件，以下是一些参考命令：
 
@@ -47,7 +55,7 @@ CREATE USER 'remote'@'%' IDENTIFIED BY '123456';
 GRANT ALL ON schedule.* TO 'remote'@'%';
 ```
 
-### Snowboy语音唤醒配置
+### Snowboy语音唤醒配置(可选)
 
 对于树莓派4B(64bit)的系统可能不需要额外配置，其他版本需要根据情况修改snowboy文件夹的配置文件，确保其能正常运行。（录入关键词需要修改assistxiaoxiao.pmdl文件，默认唤醒词为“助手晓晓”。
 
@@ -57,7 +65,7 @@ GRANT ALL ON schedule.* TO 'remote'@'%';
 
 ### 常量配置
 
-修改 const_config.py 文件夹，填入树莓派的ip，Openai的key，Azure认知服务的key（语音识别和tts都用到了，免费），代理端口，路径等。
+修改 const_config.py 文件夹，Openai的key，Azure认知服务的key（语音识别和tts都用到了，免费），代理端口，路径，相应功能的开启关闭等。
 
 对于QQ音乐的Cookie，直接在[网页](https://y.qq.com/)登录，复制cookie的值粘贴到cookie.txt，或者填写qq账号密码，自动获取（不一定成功）
 
@@ -68,8 +76,8 @@ GRANT ALL ON schedule.* TO 'remote'@'%';
 ### 运行
 
 ```bash
-python startApi.py
-python server.py
+python startApi.py #音乐服务
+python server.py #主程序
 ```
 
 语音呼叫“助手晓晓”可直接唤醒，然后语音交互

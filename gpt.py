@@ -6,7 +6,6 @@ import summary
 from random import random
 import os
 import time
-import schedule
 from const_config import proxy,openapikey
 
 usage=0
@@ -119,7 +118,6 @@ def deal():
         # Note: the JSON response may not always be valid; be sure to handle errors
         available_functions = {
             "search_from_Internet": search_func.search,
-            "schedule" : schedule.make,
         }  # only one function in this example, but you can have multiple
         function_name = response["function_call"]["name"]
         fuction_to_call = available_functions[function_name]
@@ -131,12 +129,6 @@ def deal():
             funask(function_name,function_response)
             response=deal()
             return response
-        if function_name=="schedule":
-            function_response = fuction_to_call(
-                Time=function_args.get("time"),
-                content=function_args.get("content")
-            )
-            return function_response
     elif usage > 2200:
         summareply = summary.summarize(messages)
         initsystem()

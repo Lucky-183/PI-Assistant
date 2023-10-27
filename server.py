@@ -6,10 +6,16 @@ import arcade
 from threading import Thread
 import chat
 from config import config
-import if_music
+from const_config import music_enable,schedule_enable,udp_enable
+
+if music_enable:
+    import if_music
+if schedule_enable:
+    import schedule
+if udp_enable:
+    import udpserver
+
 import if_time
-import udpserver
-import schedule
 import tts
 from play import play
 import Scene
@@ -58,8 +64,9 @@ def speakk():
 
 @app.route('/get')
 def send():
-   udpserver.udp_hi()
-   return 'receive'
+    if udp_enable:
+        udpserver.udp_hi()
+    return 'receive'
 
 @app.route('/back')
 def call():
@@ -80,7 +87,6 @@ def admin():
     while(1):
         if notifyplayer and notifysound and notifysound.is_playing(notifyplayer):
             if  notifysound.is_complete(notifyplayer): 
-
                 config.set(notify_enable=False)
                 try:
                     notifysound.stop(notifyplayer)
@@ -124,24 +130,24 @@ def admin():
 
 if __name__ == '__main__':
     
-   #print(sys.path) 
     t=Thread(target=chat.startchat)
-    #t.setDaemon(True)
     t.start()
     t2=Thread(target=admin)
-    #t2.setDaemon(True)
     t2.start()
-    t3=Thread(target=if_music.watch)
-    #t3.setDaemon(True)
-    t3.start()
-    t4=Thread(target=udpserver.udp_server)
-    t4.start()
+
+    if music_enable:
+        t3=Thread(target=if_music.watch)
+        t3.start()
+    
+    if udp_enable:
+        t4=Thread(target=udpserver.udp_server)
+        t4.start()
+
     t5=Thread(target=if_time.admin)
     t5.start()
-    t6=Thread(target=schedule.timer)
-    t6.start()
-    app.run(host='0.0.0.0')
-    
 
-        # server = pywsgi.WSGIServer(('0.0.0.0', 80), app)
-        # server.serve_forever()
+    if schedule_enable:
+        t6=Thread(target=schedule.timer)
+        t6.start()
+
+    app.run(host='0.0.0.0')

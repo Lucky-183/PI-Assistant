@@ -1,5 +1,5 @@
 import sys
-from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize
+from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable
 
 if snowboy_enable:
     from const_config import snowboypath
@@ -14,6 +14,11 @@ if use_online_recognize:
 else:
     from voskReco import vosk_reco
 
+if music_enable:   
+    import if_music
+
+if schedule_enable:
+    import schedule
 
 import speechpoint
 
@@ -33,11 +38,7 @@ from config import config
 
 import if_exit
 
-import if_music
-
 import if_time
-
-import schedule
 
 from play import play
 
@@ -188,7 +189,7 @@ def work():
     
     if allow_running:
 
-        if schedule.if_schedule(text):
+        if schedule_enable and schedule.if_schedule(text):
             next = False
             allow_running = True
             running = False
@@ -196,7 +197,7 @@ def work():
             return None
 
     if allow_running:
-        if if_music.musicdetect(text):
+        if music_enable and if_music.musicdetect(text):
             if (chatplayer and chatsound and chatsound.is_playing(chatplayer)):
                 try:
                     print('stoping chatsound(if_music)')

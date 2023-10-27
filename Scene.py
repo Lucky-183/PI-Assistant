@@ -99,7 +99,6 @@ def on_status_change(states):
         elif scene == "Night":
             play('Sound/goodnight.raw')
             config.set(Noticenotify=False, timenotify=False, general_volume=0.5, music_volume=0.1)
-        print(f"Current scene: {scene}")
         
         with open("Log/scene_changes.txt", "a") as f:
             current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
