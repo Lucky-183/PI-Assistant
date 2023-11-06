@@ -39,7 +39,7 @@ pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an 
 
 ### Nodejs安装(可选)
 
-为了使用音乐播放功能，需要安装Node.js，安装完成后可在QQMusicApi路径下运行```npm start``` 测试结果（具体使用可参考[QQMusicApi文档站](https://jsososo.github.io/QQMusicApi/#/?id=qqmusicapi)以及if_music.py）
+为了使用音乐播放功能，需要安装Node.js，默认qq号 1234567 ，修改 bin/config.js 为自己的QQ号 , 安装完成后可在QQMusicApi路径下运行```npm start``` 测试结果（具体使用可参考[QQMusicApi文档站](https://jsososo.github.io/QQMusicApi/#/?id=qqmusicapi)以及if_music.py）
 
 ### Mysql数据库安装(可选)
 
