@@ -39,7 +39,7 @@ pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an 
 
 ### Nodejs安装(可选)
 
-为了使用音乐播放功能，需要安装Node.js，安装完成后可在QQMusicApi路径下运行```npm start``` 测试结果（具体使用可参考[QQMusicApi文档站](https://jsososo.github.io/QQMusicApi/#/?id=qqmusicapi)以及if_music.py）
+为了使用音乐播放功能，需要安装Node.js，默认qq号 1234567 ，修改 bin/config.js 为自己的QQ号 , 安装完成后可在QQMusicApi路径下运行```npm start``` 测试结果（具体使用可参考[QQMusicApi文档站](https://jsososo.github.io/QQMusicApi/#/?id=qqmusicapi)以及if_music.py）
 
 ### Mysql数据库安装(可选)
 
@@ -57,7 +57,7 @@ GRANT ALL ON schedule.* TO 'remote'@'%';
 
 ### Snowboy语音唤醒配置(可选)
 
-对于树莓派4B(64bit)的系统可能不需要额外配置，其他版本需要根据情况修改snowboy文件夹的配置文件，确保其能正常运行。（录入关键词需要修改assistxiaoxiao.pmdl文件，默认唤醒词为“助手晓晓”。
+对于树莓派4B(64bit)的系统可能不需要额外配置，其他版本需要根据情况修改snowboy文件夹的配置文件，确保其能正常运行。（录入关键词需要修改assistxiaoxiao.pmdl文件，默认唤醒词为“助手晓晓”。）
 
 <br>
 
@@ -84,7 +84,7 @@ python server.py #主程序
 
 在APP上配置IP后发送消息交互，也可通过```http://语音助手ip:5000/command?words=''```直接进行交互
 
-连接了指定外设的情况下可通过按钮/无线模块触发，按钮GPIO4高电平触发，无线模块等待后期补充开源。
+连接了指定外设的情况下可通过按钮/无线模块触发，按钮GPIO4高电平触发。 无线模块开源链接：https://oshwhub.com/ghgjkh/simple-wake 
 
 语音播报功能需要手机端APP配合，APP为MacroDroid，实现过程是APP端发送相应格式的消息到```http://语音助手ip:5000/words?words=''```，然后TTS播报出来。
 
