@@ -18,7 +18,7 @@ def recognize():
         for _ in range(2):
             try:
                 b = asession.post(url, headers=header, files=files,timeout=12)
-                # print(b.text)
+                print(b.status_code,b.text)
                 break
             except Exception as e:
                 print('recognize wrong',e)

@@ -8,6 +8,7 @@ import tts
 import dealCookie
 from play import play
 from config import config
+from const_config import qqid
 header={"Connection":"close"}
 musicsound=None
 musicplayer=None
@@ -146,7 +147,7 @@ def get_cookie():
 
 def cookie_check():
 
-    r=music_get('http://127.0.0.1:3300/user/getCookie?id=1837699517',headers=header)
+    r=music_get(f'http://127.0.0.1:3300/user/getCookie?id={qqid}',headers=header)
     for cookie in r.cookies:
         if cookie.name == 'qm_keyst':
             if cookie.expires < int(time.time()):
@@ -187,11 +188,15 @@ def get_radio_list():
         print('cannot get (request) ,return')
         return
     data=json.loads(r.text)
-    for i in range(len(data['data']['tracks'])):
-        if data['data']['tracks'][i]['pay']['pay_play']==0:
-            item={'songname':data['data']['tracks'][i]['name'],'singer':data['data']['tracks'][i]['singer'][0]['name'],'songmid':data['data']['tracks'][i]['mid']}
-            advice.append(item)
-            print(item)
+    try:
+        for i in range(len(data['data']['tracks'])):
+            if data['data']['tracks'][i]['pay']['pay_play']==0:
+                item={'songname':data['data']['tracks'][i]['name'],'singer':data['data']['tracks'][i]['singer'][0]['name'],'songmid':data['data']['tracks'][i]['mid']}
+                advice.append(item)
+                print(item)
+    except Exception as e:
+        print(e)
+        return
     #print('advice_list:',advice)
     # r.close()
     # music.close()
