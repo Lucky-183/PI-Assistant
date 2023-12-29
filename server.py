@@ -2,6 +2,8 @@
 import time
 from flask import request
 from flask import Flask
+from flask import jsonify
+from flask import render_template
 import arcade
 from threading import Thread
 import chat
@@ -19,6 +21,7 @@ import if_time
 import tts
 from play import play
 import Scene
+
 notifyplayer=None
 notifysound=None
 
@@ -26,6 +29,33 @@ global status
 status='1'
 words=''
 app = Flask(__name__)
+
+from flask import jsonify
+
+@app.route('/')
+def index():
+    editable_config = {k: config.params[k] for k in config.allow_params if k in config.params}
+    return render_template('index.html', config=editable_config)
+
+@app.route('/update_config', methods=['POST'])
+def update_config():
+    data = request.json
+    for key, value in data.items():
+        # 转换为合适的数据类型
+        if isinstance(value, str):
+            if value.lower() == 'true':
+                value = True
+            elif value.lower() == 'false':
+                value = False
+            elif value.isdigit():
+                value = int(value)
+            else:
+                try:
+                    value = float(value)
+                except ValueError:
+                    pass
+        config.set(**{key: value})
+    return jsonify(success=True)
 
 @app.route('/cookie')
 def chang():

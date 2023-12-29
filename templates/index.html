@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>语音助手配置</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        div {
+            margin-bottom: 10px;
+        }
+
+        input[type="text"], input[type="checkbox"] {
+            margin-top: 5px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            margin: 6px 0 10px;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
+        <script>
+        function updateConfig(key, value) {
+            fetch('/update_config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ [key]: value })
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>语音助手配置</h1>
+        <form>
+            {% for key, value in config.items() %}
+                <div>
+                    <label for="{{ key }}">{{ key }}:</label>
+                    {% if value is sameas true or value is sameas false %}
+                        <input type="checkbox" id="{{ key }}" name="{{ key }}"
+                               {% if value %} checked {% endif %}
+                               onchange="updateConfig(this.name, this.checked)">
+                    {% else %}
+                        <input type="text" id="{{ key }}" name="{{ key }}" value="{{ value }}"
+                               onchange="updateConfig(this.name, this.value)">
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </form>
+    </div>
+</body>
+</html>
+

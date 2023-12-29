@@ -12,7 +12,7 @@ class ConfigManager:
             "rec_enable" : False,  # wifi module
 
             "command" : '',
-            "music_volume": 0.3,
+            "music_volume": 0.25,
             "general_volume": 0.5,
             "wakebyhw": False,
             "hw_started" : False,
@@ -22,7 +22,7 @@ class ConfigManager:
             # ... 可以添加更多的参数
         }
         self.tracked_params = ['notify_enable','chat_enable','music_volume', 'general_volume', 'wakebyhw', "Noticenotify", "timenotify", "MusicPlay"]  # 这里列出您关心的参数
-
+        self.allow_params = ['command', 'music_volume', 'general_volume', 'wakebyhw', "wakebyhw", "Noticenotify", "timenotify", "MusicPlay"]
 
     def write_to_file(self, changed_params):
         """将当前的参数状态写入到文件"""
