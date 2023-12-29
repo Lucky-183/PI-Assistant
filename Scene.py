@@ -52,9 +52,11 @@ class SceneManager:
                     SceneManager.current_scene = scene
                     return scene
         # 如果没有匹配的场景，设置为 'Unknown Scene'
-        if SceneManager.current_scene != "Unknown Scene":
-            SceneManager.current_scene = "Unknown Scene"
-            return "Unknown Scene"
+
+        if not any(SceneManager._scene_match(states, cond) for cond in SceneManager.scene_conditions.values()):
+            if SceneManager.current_scene != "Unknown Scene":
+                SceneManager.current_scene = "Unknown Scene"
+                return "Unknown Scene"
 
         return None
 
