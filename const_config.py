@@ -1,5 +1,13 @@
 # 用到的端口 3306 mysql 3300 音乐接口 5000 网络交互 6666 udp服务
+
+use_openai=True #True则使用openai,False则使用SparkApi,填写对应的Key即可
 openapikey='' #gpt-key
+
+#use_openai=False 
+sparkapi_appid=''
+sparkapi_secret=''
+sparkapi_key=''
+
 use_online_recognize=True #是否采用线上语音识别（效果好，针对优化）
 azure_key=''   #Azrue tts recog
 proxy= {'http':'http://127.0.0.1:10810',

@@ -1,5 +1,5 @@
 import sys
-from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable
+from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable,use_openai
 
 if snowboy_enable:
     from const_config import snowboypath
@@ -24,7 +24,10 @@ import speechpoint
 
 from tts import ssml_wav
 
-import gpt
+if use_openai:
+    import gpt
+else:
+    import sparkApi
 
 import os
 
@@ -179,7 +182,8 @@ def work():
             return None
 
         if if_exit.ifexit(text):
-            gpt.save()
+            if use_openai:
+                gpt.save()
             flag = 0
             next = False
             allow_running = True
@@ -227,9 +231,14 @@ def work():
             return None
         
     if allow_running:
-        gpt.ask(text)
+        if use_openai:
+            gpt.ask(text)
         try:
-            reply = gpt.deal()
+            if use_openai:
+                reply = gpt.deal()
+            else:
+                reply=sparkApi.ask(text)
+
         except Exception as e:
 
             print('error:', e)
@@ -239,14 +248,20 @@ def work():
             running = False
             return None
         else:
-            print(reply['content'])
+            if use_openai:
+                print(reply['content'])
+            else:
+                print(reply)
 
-        if reply['content'].find('结束对话') != -1:
+        if use_openai and reply['content'].find('结束对话') != -1:
             next = False
 
     if allow_running:
         try:
-            ssml_wav(reply['content'],'Sound/answer.wav')
+            if use_openai:
+                ssml_wav(reply['content'],'Sound/answer.wav')
+            else:
+                ssml_wav(reply,'Sound/answer.wav')
             print('ssml complete!')
         except Exception as e:
             print(e)
@@ -330,7 +345,8 @@ def startchat():
     t2.setDaemon(True)
     t2.start()
     #os.system('/home/pi/linkbt.sh')
-    gpt.read()
+    if use_openai:
+        gpt.read()
     if snowboy_enable is True and config.get("wakebyhw") is True:
         t3 = Thread(target=hotwordBymic.start, args=(hwcallback,))
         t3.setDaemon(True)
