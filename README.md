@@ -3,6 +3,13 @@
 
 <br>
 
+## 🗺️ 更新日志
+
+### [2023/12/29]
+- 已支持WebUI调参，可调参数可自由选择
+- 已支持讯飞星火大模型API
+- 优化场景配置代码
+
 ## 💡 功能列表
 
 - 支持多种唤醒方式：语音唤醒，APP消息唤醒，外设唤醒
@@ -11,13 +18,14 @@
 - 文字转语音：舒适的人声
 - 接续对话：完成交互对话全程只需唤醒一次
 - 支持对话中断：可在任意时刻打断对话，重新提问
-- 交互接入GPT：支持聊天上下文，具有互联网搜索能力，并适时总结对话
+- 双引擎可选交互：接入GPT/星火大模型，支持聊天上下文，具有互联网搜索能力，并适时总结对话
 - 聊天记忆：在程序结束后保存聊天内容，重新运行时自动加载
 - 通知播报：手机上接收的消息（熄屏时）以自定义格式播报
 - 音乐播放：获取QQ音乐个性推荐，支持调整音量，切换，暂停
 - 音频闪避：在聊天交互/通知播报时自动减小音乐音量
 - 日程设定：支持设定闹钟/倒计时，以及提醒事项
 - 功能可扩展：传入自定义状态，支持自定义场景触发自定义动作
+- WebUI调参：可通过电脑和手机登录网页调参
 
 <br>
 
@@ -26,7 +34,7 @@
 ### Python模块安装
 
 ```bash
-pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an duckduckgo_search newspaper3k flask SpeechRecognition openai pyaudio
+pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an duckduckgo_search newspaper3k flask SpeechRecognition openai pyaudio websocket-client
 ```
 
 ### Azure认知服务
@@ -92,12 +100,15 @@ python server.py #主程序
 
 支持自定义扩展，在 Scene.py 中定义状态变量并设置触发场景，在场景中配置相应的动作，在 config.py 中定义开关量，编写专用外设控制文件，在专用外设控制文件获取开关量，执行相关动作。在其他文件中调用修改状态变量函数时会自动回调检查是否符合场景预设，若是则执行对应动作。
 
+### 运行时调参
+
+可使用网页端在程序运行时调参,地址为 http://ip:5000 
+
 <br>
 
 ## ✏️ 待实现功能
 
-- WebUi调参网页制作
+- 添加编写外设控制文件以及对应场景示例，演示实现光感控制灯。
 
-- 添加外设控制文件以及对应场景，实现光感控制灯等。
-
-- 添加星火大模型API
+- 优化星火API提示词，支持聊天记录保存
+  
