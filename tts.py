@@ -19,7 +19,7 @@ def ssml_wav(text,filename):
                 {text}       </mstts:express-as>
     </voice>
 </speak>'''
-    content=dialog.post(url,headers=header,data=ssml_string.encode('utf-8'),timeout=8)
+    content=dialog.post(url,headers=header,data=ssml_string.encode('utf-8'))
     #if (os.path.exists('answer.wav')):
     #    os.remove('answer.wav')
     with open(filename,'wb') as f:

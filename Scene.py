@@ -40,7 +40,7 @@ class StatusManager:
 class SceneManager:
     current_scene = "Unknown Scene"
     scene_conditions = {
-        "Morning": {"time_range": (8, 23), "user_status": "online"},
+        "Morning": {"time_range": (8, 23), "user_status": None},
         "Night": {"time_range": (0, 8), "user_status": None},
     }
 
