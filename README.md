@@ -5,6 +5,11 @@
 
 ## 🗺️ 更新日志
 
+### [2024/1/8]
+- 解决duckduckgo联网搜索失效的问题
+
+<br>
+
 ### [2023/12/29]
 - 已支持WebUI调参，可调参数可自由选择
 - 已支持讯飞星火大模型API
@@ -36,7 +41,7 @@
 ### Python模块安装
 
 ```bash
-pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an duckduckgo_search newspaper3k flask SpeechRecognition openai pyaudio websocket-client
+pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client
 ```
 
 ### Azure认知服务
@@ -114,5 +119,3 @@ python server.py #主程序
 
 - 优化星火API提示词，支持聊天记录保存。
 
-- DDG联网搜索暂时存在问题，待解决。
-  
