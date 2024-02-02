@@ -43,6 +43,7 @@ class SceneManager:
                 if scene != self.current_scene:
                     self.current_scene = scene
                     return scene
+                return
         
         if not any(self._scene_match(states, cond) for cond in self.scene_conditions.values()):
             if self.current_scene != "Unknown Scene":
@@ -54,13 +55,24 @@ class SceneManager:
     def _scene_match(self, states, conditions):
         for key, value in conditions.items():
             state_value = states.get(key)
-
+            if state_value is None:
+                continue
             if isinstance(value, (list, tuple)):
                 # 当条件值是一个范围（例如，元组或列表）
                 if key == "time":
-                    # 特别处理时间范围
-                    if not (value[0] <= state_value.hour < value[1]):
-                        return False
+                    start_hour, end_hour, start_minute, end_minute = value
+                    current_hour, current_minute = state_value.hour, state_value.minute
+
+                    if start_hour > end_hour:  # 跨越午夜
+                        if (current_hour > end_hour and current_hour < start_hour) or \
+                                (current_hour == start_hour and current_minute < start_minute) or \
+                                (current_hour == end_hour and current_minute >= end_minute):
+                            return False
+                    else:  # 不跨越午夜
+                        if (current_hour < start_hour) or (current_hour > end_hour) or \
+                                (current_hour == start_hour and current_minute < start_minute) or \
+                                (current_hour == end_hour and current_minute >= end_minute):
+                            return False
                 else:
                     # 通用范围比较
                     if not (value[0] <= state_value <= value[1]):

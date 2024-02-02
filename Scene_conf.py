@@ -7,8 +7,8 @@ init_state={
             "user_status": "offline"
         }
 init_condition={
-        "Morning": {"time": (8, 23), "user_status": None},
-        "Night": {"time": (0, 8), "user_status": None},
+        "Morning": {"time": (15, 15,0,47), "user_status": None},
+        "Night": {"time": (0, 15,0,49), "user_status": None},
     }
 
 def deal_condition(scene):
