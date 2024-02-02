@@ -2,15 +2,12 @@ import json
 from datetime import datetime
 
 # 控制变量
-
-class ConfigManager:
-    def __init__(self):
-        self.params = {
+parmas={
             # 线程锁 LOCK
             "notify_enable" : False,
             "chat_enable" : False,
             "rec_enable" : False,  # wifi module
-
+            # 参量
             "command" : '',
             "music_volume": 0.25,
             "general_volume": 0.5,
@@ -18,11 +15,19 @@ class ConfigManager:
             "hw_started" : False,
             "Noticenotify": True,
             "timenotify": True,
-            "MusicPlay": False
+            "MusicPlay": False,
+            # 外设
+            "dev_demo":True
             # ... 可以添加更多的参数
         }
-        self.tracked_params = ['notify_enable','chat_enable','music_volume', 'general_volume', 'wakebyhw', "Noticenotify", "timenotify", "MusicPlay"]  # 这里列出您关心的参数
-        self.allow_params = ['command', 'music_volume', 'general_volume', 'wakebyhw', "wakebyhw", "Noticenotify", "timenotify", "MusicPlay"]
+tracked_params=['notify_enable','chat_enable','music_volume', 'general_volume', 'wakebyhw', "Noticenotify", "timenotify", "MusicPlay"]  # 这里列出关心的参数
+allow_params=['command', 'music_volume', 'general_volume', "wakebyhw", "Noticenotify", "timenotify", "MusicPlay"] #WebUI可修改的参数
+
+class ConfigManager:
+    def __init__(self,params,tracked_params,allow_params):
+        self.params = params
+        self.tracked_params = tracked_params
+        self.allow_params = allow_params
 
     def write_to_file(self, changed_params):
         """将当前的参数状态写入到文件"""
@@ -52,6 +57,6 @@ class ConfigManager:
         return self.params.get(key, None)
 
 # 创建单例
-config = ConfigManager()
+config = ConfigManager(parmas,tracked_params,allow_params)
 
 

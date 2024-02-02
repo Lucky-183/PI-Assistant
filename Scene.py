@@ -1,15 +1,10 @@
 import threading
 from datetime import datetime
-from config import config
-from play import play
+from Scene_conf import init_state,init_condition,deal_condition
 
 class StatusManager:
-    def __init__(self, callback=None):
-        self.states = {
-            "music_playing": False,
-            "current_time": datetime.now(),
-            "user_status": "offline"
-        }
+    def __init__(self, callback,states):
+        self.states = states
         self.callback = callback
         self._start_time_updater()
 
@@ -18,7 +13,7 @@ class StatusManager:
         threading.Timer(30, self._start_time_updater).start()
 
     def _update_time(self):
-        self.states["current_time"] = datetime.now()
+        self.states["time"] = datetime.now()
         if self.callback:
             self.callback(self.states)
 
@@ -38,49 +33,50 @@ class StatusManager:
 
 
 class SceneManager:
-    current_scene = "Unknown Scene"
-    scene_conditions = {
-        "Morning": {"time_range": (8, 23), "user_status": None},
-        "Night": {"time_range": (0, 8), "user_status": None},
-    }
+    def __init__(self, scene_conditions):
+        self.scene_conditions = scene_conditions
+        self.current_scene = "Unknown Scene"
 
-    @staticmethod
-    def check_scenes(states):
-        for scene, conditions in SceneManager.scene_conditions.items():
-            if SceneManager._scene_match(states, conditions):
-                if scene != SceneManager.current_scene:
-                    SceneManager.current_scene = scene
+    def check_scenes(self, states):
+        for scene, conditions in self.scene_conditions.items():
+            if self._scene_match(states, conditions):
+                if scene != self.current_scene:
+                    self.current_scene = scene
                     return scene
-        # 如果没有匹配的场景，设置为 'Unknown Scene'
-
-        if not any(SceneManager._scene_match(states, cond) for cond in SceneManager.scene_conditions.values()):
-            if SceneManager.current_scene != "Unknown Scene":
-                SceneManager.current_scene = "Unknown Scene"
+        
+        if not any(self._scene_match(states, cond) for cond in self.scene_conditions.values()):
+            if self.current_scene != "Unknown Scene":
+                self.current_scene = "Unknown Scene"
                 return "Unknown Scene"
 
         return None
 
-    @staticmethod
-    def _scene_match(states, conditions):
+    def _scene_match(self, states, conditions):
         for key, value in conditions.items():
-            if key == "time_range":
-                if not (value[0] <= states["current_time"].hour < value[1]):
+            state_value = states.get(key)
+
+            if isinstance(value, (list, tuple)):
+                # 当条件值是一个范围（例如，元组或列表）
+                if key == "time":
+                    # 特别处理时间范围
+                    if not (value[0] <= state_value.hour < value[1]):
+                        return False
+                else:
+                    # 通用范围比较
+                    if not (value[0] <= state_value <= value[1]):
+                        return False
+            else:
+                # 当条件值是一个特定值
+                if value is not None and state_value != value:
                     return False
-            elif value is not None and states.get(key) != value:
-                return False
         return True
 
 
 def on_status_change(states):
-    scene = SceneManager.check_scenes(states)
+    scene = scene_manager.check_scenes(states)
     if scene:
-        if scene == "Morning":
-            config.set(notify=True, time_notify=True, general_volume=0.8, music_volume=0.3)
-            play('Sound/goodmorning.raw')
-        elif scene == "Night":
-            play('Sound/goodnight.raw')
-            config.set(notify=False, time_notify=False, general_volume=0.5, music_volume=0.1)
-        
+        deal_condition(scene)
+
         with open("Log/scene_changes.txt", "a") as f:
             current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             f.write(f"{current_time} - Scene changed to: {scene}\n")
@@ -89,7 +85,8 @@ def on_status_change(states):
     else:
         pass
 
-# 使用方法
-status_manager = StatusManager(callback=on_status_change)
+
+scene_manager=SceneManager(init_condition)
+status_manager = StatusManager(callback=on_status_change,states=init_state)
 
 
