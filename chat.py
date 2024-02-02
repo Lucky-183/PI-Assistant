@@ -258,6 +258,8 @@ def work():
 
     if allow_running:
         try:
+            if os.path.exists('Sound/answer.wav'):
+                os.remove('Sound/answer.wav')
             if use_openai:
                 ssml_wav(reply['content'],'Sound/answer.wav')
             else:
