@@ -22,14 +22,13 @@ parmas = {
 }
 # 这里列出需要追踪的参数
 tracked_params = [
-    "notify_enable",
-    "chat_enable",
     "music_volume",
     "general_volume",
     "wakebyhw",
     "Noticenotify",
     "timenotify",
     "MusicPlay",
+    "dev_demo"
 ]
 # WebUI可修改的参数
 allow_params = [
@@ -74,8 +73,7 @@ class ConfigManager:
         if changed_params:
             self.write_to_file(changed_params)
             # 打印所有改变的参数
-            if changed_params:
-                print(changed_params)
+            print(changed_params)
 
     def get(self, key):
         """获取参数的值"""

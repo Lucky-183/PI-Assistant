@@ -1,5 +1,5 @@
 import sys
-from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable,use_openai
+from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable,use_openai,dev_enable
 
 if snowboy_enable:
     from const_config import snowboypath
@@ -19,6 +19,10 @@ if music_enable:
 
 if schedule_enable:
     import schedule
+
+if dev_enable:
+    import dev_control
+    import if_devControl
 
 import speechpoint
 
@@ -215,6 +219,14 @@ def work():
             config.set(chat_enable=False)
             return None
 
+    if allow_running:
+        if dev_enable and if_devControl.detect(text):
+            next = False
+            allow_running = True
+            running = False
+            config.set(chat_enable=False)
+            return None
+        
     if allow_running:
         if if_time.timedetect(text):
             if (chatplayer and chatsound and chatsound.is_playing(chatplayer)):

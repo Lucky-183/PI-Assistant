@@ -6,7 +6,8 @@ from Scene import status_manager
 from threading import Event
 MQTT_BROKER = '127.0.0.1'
 MQTT_PORT = 1883
-
+USERNAME = 'pi'
+PASSWORD = '123456'
 #定义设备,设定订阅主题与发布主题
 devices={
     "sensor_demo":{
@@ -24,6 +25,7 @@ devices={
 class MQTTClient:
     def __init__(self):
         self.client = mqtt.Client(client_id="MasterClient")
+        self.client.username_pw_set(USERNAME, PASSWORD)
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
         self.client.connect(MQTT_BROKER, MQTT_PORT, 60)
@@ -80,5 +82,5 @@ class MQTTClient:
                             self.dev_ack_received[dev].clear()
             time.sleep(1)  # 延迟1秒再次检查状态，避免过于频繁的检查    
 
-if __name__ == "__main__":
-    client = MQTTClient()
+
+client = MQTTClient()
