@@ -39,7 +39,7 @@ class MQTTClient:
         threading.Thread(target=self.monitor_dev_status, daemon=True).start()
 
     def on_connect(self, client, userdata, flags, rc):
-        print("Connected with result code "+str(rc))
+        print("MQTT Client：Connected with result code "+str(rc))
         for dev in devices.values():
             for topic in dev['sub_topic']:
                 client.subscribe(topic)
