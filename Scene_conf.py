@@ -8,7 +8,7 @@ init_state = {
     "user_status": "offline",
     "sensor_demo": None,
 }
-# 场景条件
+# 场景条件（越靠前优先级越高）
 init_condition = {
     "demo1": {"sensor_demo": True},
     "demo2": {"sensor_demo": False},
