@@ -56,7 +56,7 @@ class SceneManager:
         for key, value in conditions.items():
             state_value = states.get(key)
             if state_value is None:
-                continue
+                return False
             if isinstance(value, (list, tuple)):
                 # 当条件值是一个范围（例如，元组或列表）
                 if key == "time":
