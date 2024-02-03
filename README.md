@@ -5,6 +5,11 @@
 
 ## 🗺️ 更新日志
 
+### [2024/2/3]
+- 支持局域网外设控制（MQTT）
+- 优化场景类、配置类、状态类结构
+- 最小化程序支持在PC（win10）运行
+
 ### [2024/1/8]
 - 解决duckduckgo联网搜索失效的问题（注意及时升级ddg库）
 
@@ -29,8 +34,9 @@
 - 音乐播放：获取QQ音乐个性推荐，支持调整音量，切换，暂停
 - 音频闪避：在聊天交互/通知播报时自动减小音乐音量
 - 日程设定：支持设定闹钟/倒计时，以及提醒事项
-- 功能可扩展：传入自定义状态，支持自定义场景触发自定义动作
 - WebUI调参：可通过电脑和手机登录网页调参
+- 外设控制：支持接入自定义设备（MQTT协议），配置相关文件可实现自动化
+- 自动化智能家居：传入自定义状态，支持自定义场景触发自定义动作
 
 <br>
 
@@ -39,7 +45,7 @@
 ### Python模块安装
 
 ```bash
-pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client
+pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt
 ```
 
 ### Azure认知服务
@@ -72,6 +78,42 @@ GRANT ALL ON schedule.* TO 'remote'@'%';
 
 对于树莓派4B(64bit)的系统可能不需要额外配置，其他版本需要根据情况修改snowboy文件夹的配置文件，确保其能正常运行。（录入关键词需要修改assistxiaoxiao.pmdl文件，默认唤醒词为“助手晓晓”。）
 
+
+### 场景、外设及自动化配置(可选)
+
+支持自定义扩展，在 Scene_conf.py 中定义状态变量并设置触发场景，配置相应的动作，在 config.py 中定义开关量，编写专用外设控制文件，在专用外设控制文件获取开关量，执行相关动作。调用修改状态变量函数时会自动回调检查是否符合场景预设，若是则执行对应动作。
+
+支持外接无线设备，作为设备的数据流转和控制中心，可达到极高的可扩展性。
+
+<details>
+<br>
+外设通讯协议为MQTT，在树莓派上安装mosquito服务器，用户名和密码分别设置为 pi，123456。配置参考如下：
+
+/etc/mosquitto/mosquitto.conf
+
+```
+listener 1883
+allow_anonymous false
+password_file /etc/mosquitto/passwd
+```
+
+设备分为输入设备（如传感器）和输出设备（如开关），以下描述了外设控制的两种数据流动：
+
+- 输入设备（传感器）数据→状态管理器→场景管理器→配置管理器→输出设备（开关、灯）
+
+此控制方案用于自动化控制，传感器的值会改变状态管理器的状态量，进而触发场景检测，满足对应场景后调用配置管理器的接口，控制设备。
+
+- 控制命令（语音）→配置管理器→输出设备（开关、灯）
+
+此控制方案用于手动控制，通过文字指令或语音指令直接修改配置管理器的变量，控制设备。
+
+外设控制配置文件包括以下几个文件：dev_control.py(定义所有设备) ,config.py（定义输出设备） ,Scene_conf.py(定义输入设备以及场景)
+
+文件中提供了一个示例，sensor_demo作为输入设备，dev_demo作为输出设备，当sensor_demo发送True（False）时，dev_demo点亮（关闭）板载LED。硬件采用esp32，相关的硬件代码提供在```mqtt_demo```文件夹。
+
+代码设计有反馈机制，输出设备在接收到信息后需要有ACK，否则树莓派会认为此次控制不成功。
+</details>
+
 <br>
 
 ## 📄 使用文档
@@ -103,7 +145,7 @@ python server.py #主程序
 
 具体的功能可以根据chat.py的执行逻辑以及对应文件查看使用
 
-支持自定义扩展，在 Scene.py 中定义状态变量并设置触发场景，在场景中配置相应的动作，在 config.py 中定义开关量，编写专用外设控制文件，在专用外设控制文件获取开关量，执行相关动作。在其他文件中调用修改状态变量函数时会自动回调检查是否符合场景预设，若是则执行对应动作。
+
 
 ### 运行时调参
 
@@ -113,7 +155,8 @@ python server.py #主程序
 
 ## ✏️ 待实现功能
 
-- 添加编写外设控制文件以及对应场景示例，演示实现光感控制灯。
+- 低功耗Wifi外设硬件开发，完善外设控制
 
 - 实现设备外网远程控制（MQTT）
 
+- 对接HomeAssist（长期目标）

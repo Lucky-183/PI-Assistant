@@ -46,7 +46,6 @@ def ssml_save(text,filename):
             content = dialog.post(url, headers=header,data=ssml_string.encode('utf-8'))
             with open(filename, 'wb') as f:
                 f.write(content.content)
-                f.close()
             return
         except Exception as e:
             print(e)
