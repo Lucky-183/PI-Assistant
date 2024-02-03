@@ -1,20 +1,35 @@
 from config import config
 from play import play
 
-init_state={
-            "music_playing": False,
-            "time": None,
-            "user_status": "offline"
-        }
-init_condition={
-        "Morning": {"time": (15, 15,0,47), "user_status": None},
-        "Night": {"time": (0, 15,0,49), "user_status": None},
-    }
+# 状态量,可为None
+init_state = {
+    "music_playing": False,
+    "time": None,
+    "user_status": "offline",
+    "sensor_demo": None,
+}
+# 场景条件
+init_condition = {
+    "demo1": {"sensor_demo": True},
+    "demo2": {"sensor_demo": False},
+    "Morning": {"time": (6, 9, 0, 0), "user_status": None},
+    "Night": {"time": (23, 5, 0, 0), "user_status": None},
+}
 
+
+# 执行动作
 def deal_condition(scene):
     if scene == "Morning":
-        config.set(notify=True, time_notify=True, general_volume=0.8, music_volume=0.3)
-        play('Sound/goodmorning.raw')
+        config.set(
+            Noticenotify=True, timenotify=True, general_volume=0.8, music_volume=0.3
+        )
+        play("Sound/goodmorning.raw")
     elif scene == "Night":
-        play('Sound/goodnight.raw')
-        config.set(notify=False, time_notify=False, general_volume=0.5, music_volume=0.1)
+        play("Sound/goodnight.raw")
+        config.set(
+            Noticenotify=False, timenotify=False, general_volume=0.5, music_volume=0.1
+        )
+    elif scene == "demo1":
+        config.set(dev_demo=True)
+    elif scene == "demo2":
+        config.set(dev_demo=False)
