@@ -17,13 +17,19 @@ class StatusManager:
         if self.callback:
             self.callback(self.states)
 
-    def set_status(self, key, value):
-        if key in self.states:
-            self.states[key] = value
-            if self.callback:
-                self.callback(self.states)
-        else:
-            raise ValueError(f"Unknown status key: {key}")
+    def set_status(self, **kwargs):
+        changed_states = {}  # 记录发生变化的状态
+        for key, value in kwargs.items():
+            if key in self.states:
+                # 检查值是否发生变化
+                if self.states[key] != value:
+                    changed_states[key] = value
+                self.states[key] = value
+            else:
+                raise ValueError(f"Unknown status key: {key}")
+        # 如果有状态变化且存在回调函数，则调用回调函数并传入发生变化的状态
+        if changed_states and self.callback:
+            self.callback(self.states)
 
     def get_status(self, key):
         return self.states.get(key, None)
