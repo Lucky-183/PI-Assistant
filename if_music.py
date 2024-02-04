@@ -5,7 +5,7 @@ import arcade
 import time
 from pydub import AudioSegment
 import tts
-import dealCookie
+# import dealCookie
 from play import play
 from config import config
 from const_config import qqid
@@ -98,25 +98,25 @@ def music_get(url, headers):
     play('Sound/urlwrong.wav')
     return False
 
-def get_source_cookie():
-    # print('stop in get source cookie')
-    # return
-    print('start get source cookie')
-    dealCookie.get_cookie()
-    print('complete')
+# def get_source_cookie():
+#     # print('stop in get source cookie')
+#     # return
+#     print('start get source cookie')
+#     dealCookie.get_cookie()
+#     print('complete')
 
-def set_cookie():
+# def set_cookie():
 
-    get_source_cookie()
-    with open('cookie.txt', 'r') as f:
-        cookie = f.read()
-        f.close()
-    cookiejson = {'data': cookie}
-    #print('cookie is', cookie)
-    print('start set new cookie')
-    headers = {"content-type": 'application/json', 'Connection': 'close'}
-    r = requests.post(url='http://127.0.0.1:3300/user/setCookie', json=cookiejson, headers=headers)
-    r.close()
+#     get_source_cookie()
+#     with open('cookie.txt', 'r') as f:
+#         cookie = f.read()
+#         f.close()
+#     cookiejson = {'data': cookie}
+#     #print('cookie is', cookie)
+#     print('start set new cookie')
+#     headers = {"content-type": 'application/json', 'Connection': 'close'}
+#     r = requests.post(url='http://127.0.0.1:3300/user/setCookie', json=cookiejson, headers=headers)
+#     r.close()
 
 def get_cookie():
     global cookiewrong,startagain
@@ -124,7 +124,6 @@ def get_cookie():
         cookie = f.read()
         f.close()
     cookiejson = {'data': cookie}
-    print('cookie is', cookie)
     print('start set cookie')
     headers = {"content-type": 'application/json', 'Connection': 'close'}
     r = requests.post(url='http://127.0.0.1:3300/user/setCookie', json=cookiejson, headers=headers)
@@ -133,21 +132,27 @@ def get_cookie():
         cookiewrong = False
         return True
     else:
-        play('Sound/dealcookie.wav')
-        set_cookie()
-        play('Sound/dealcookieok.wav')
-        if not cookie_check():
-            print('source cookie error')# 获取资源出现错误,请检查cookie
-            if cookiewrong is False:
-                cookiewrong=True
-                startagain=False
-            return False
-        else:
-            return True
+        # play('Sound/dealcookie.wav')
+        # set_cookie()
+        # play('Sound/dealcookieok.wav')
+        # if not cookie_check():
+        #     print('source cookie error')# 获取资源出现错误,请检查cookie
+        #     if cookiewrong is False:
+        #         cookiewrong=True
+        #         startagain=False
+        #     return False
+        # else:
+        #     return True
+        return False
 
 def cookie_check():
-
+    global cookiewrong,startagain
     r=music_get(f'http://127.0.0.1:3300/user/getCookie?id={qqid}',headers=header)
+    if  r is False:
+        print('cookie_get wrong ,check if server on ,return')
+        cookiewrong=True
+        startagain=False
+        return False
     for cookie in r.cookies:
         if cookie.name == 'qm_keyst':
             if cookie.expires < int(time.time()):
