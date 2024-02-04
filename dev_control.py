@@ -56,7 +56,7 @@ class MQTTClient:
                     print(f"Ack received from {dev}.")
                 else:
                     sensor_value = msg.payload.decode() == 'True'
-                    status_manager.set_status(dev, sensor_value)
+                    status_manager.set_status(**{dev:sensor_value})
                     client.publish(topics['pub_topic'], "ACK:"+str(sensor_value))
                     print(f"Published ACK:{sensor_value} to {topics['pub_topic']}")
                 break
@@ -65,7 +65,7 @@ class MQTTClient:
         while True:
             for dev, topics in devices.items():
                 if topics['type'] == 'output':
-                    current_status = config.get(dev)  # 假设config是一个全局的配置状态管理器
+                    current_status = config.get(dev)  # config是一个全局的配置状态管理器
                     if current_status != self.dev_status[dev]:
                         # 发布新状态
                         self.client.publish(topics['pub_topic'], str(current_status))
@@ -74,7 +74,7 @@ class MQTTClient:
                         if not self.dev_ack_received[dev].wait(5):
                             print(f"No ack received from {dev}, resetting status.")
                             # 如果没有收到ack，复位设备状态
-                            config.set(**{dev: self.dev_status[dev]})  # 假设config有一个set方法来更新设备状态
+                            config.set(**{dev: self.dev_status[dev]})  # config有一个set方法来更新设备状态
                             print(f"Reset status of {dev} to {self.dev_status[dev]}")
                         else:
                             # 如果收到ack，更新最后的设备状态，并清除事件标志以便下一次使用
