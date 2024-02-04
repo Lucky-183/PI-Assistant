@@ -431,12 +431,11 @@ def watch():
         if musicsound and musicplayer and musicsound.is_playing(musicplayer):
             if (config.get("chat_enable") or config.get("notify_enable") or config.get("rec_enable")):
                 if musicsound.get_volume(musicplayer)!=0.05:
-
                     musicsound.set_volume(0.05, musicplayer)
                     print('Watch: turn down the volume')
             elif musicsound.get_volume(musicplayer)!=config.get("music_volume"):
                 musicsound.set_volume(config.get("music_volume"), musicplayer)
-                print('Watch: turn up the volume')
+                print('Watch: change the volume')
         if time.localtime()[2]!=lastime:
             print('Watch : new day')
             lastime=time.localtime()[2]

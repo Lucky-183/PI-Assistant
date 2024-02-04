@@ -130,7 +130,7 @@ password_file /etc/mosquitto/passwd
 
 修改 const_config.py 文件夹，Openai的key，Azure认知服务的key（语音识别和tts都用到了，免费），代理端口，路径，相应功能的开启关闭等。
 
-对于QQ音乐的Cookie，直接在[网页](https://y.qq.com/)登录，复制cookie的值粘贴到cookie.txt，或者填写qq账号密码，自动获取（不一定成功）
+对于QQ音乐的Cookie，直接在[网页](https://y.qq.com/)登录，复制cookie的值粘贴到cookie.txt。
 
 ### 变量配置
 
