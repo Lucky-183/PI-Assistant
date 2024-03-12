@@ -32,7 +32,7 @@ def ssml_save(text,filename):
     header={
 'X-Microsoft-OutputFormat': 'raw-24khz-16bit-mono-pcm',
 'Content-Type': 'application/ssml+xml',
-'Ocp-Apim-Subscription-Key': 'e4c4758bea374400bfae10ab165fe539'
+'Ocp-Apim-Subscription-Key': azure_key
 }
     ssml_string=f'''<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis"
        xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="zh-CN">
