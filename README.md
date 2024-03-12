@@ -5,6 +5,19 @@
 
 ## 🗺️ 更新日志
 
+### [2024/3/12]
+
+- 增加广域网控制支持，采用MQTT协议，实现广域网下的设备控制，消息传递
+- 完善WebUI，增加快捷命令，增加回复窗口
+- GPT版本改指向GPT-4-turbo-preview，并修改提示词
+- 适配新版本DDG搜索
+- 增强设备控制通用性和稳定性
+- 删除早期APP，统一采用Web控制
+
+<details>
+
+<summary>更多</summary>
+
 ### [2024/2/3]
 
 - 支持局域网外设控制（MQTT）
@@ -12,9 +25,6 @@
 - 最小化程序支持在PC（win10）运行
 - 简化代码,删除音乐模块的自动获取Cookie功能
 
-<details>
-  
-<summary>更多</summary>
   
 ### [2024/1/8]
 
@@ -30,7 +40,7 @@
 
 ## 💡 功能列表
 
-- 支持多种唤醒方式：语音唤醒，APP消息唤醒，外设唤醒
+- 支持多种唤醒方式：语音唤醒，局域网消息唤醒，外设唤醒，远程唤醒
 - 语音端点检测：自动检测语音截止点
 - 语音识别：支持在线与离线双模式
 - 文字转语音：舒适的人声
@@ -45,6 +55,7 @@
 - WebUI调参：可通过电脑和手机登录网页调参
 - 外设控制：支持接入自定义设备（MQTT协议），配置相关文件可实现自动化
 - 自动化智能家居：传入自定义状态，支持自定义场景触发自定义动作
+- 远程控制：支持广域网MQTT设备控制
 
 <br>
 
@@ -117,10 +128,22 @@ password_file /etc/mosquitto/passwd
 
 外设控制配置文件包括以下几个文件：dev_control.py(定义所有设备) ,config.py（定义输出设备） ,Scene_conf.py(定义输入设备以及场景)
 
-文件中提供了一个示例，sensor_demo作为输入设备，dev_demo作为输出设备，当sensor_demo发送True（False）时，dev_demo点亮（关闭）板载LED。硬件采用esp32，相关的硬件代码提供在```mqtt_demo```文件夹。
+文件中提供了一个示例，sensor_demo作为输入设备，dev_demo作为输出设备，当sensor_demo发送True（False）时，dev_demo点亮（关闭）板载LED。硬件采用Esp32，相关的硬件代码提供在```mqtt_demo```文件夹。
 
 代码设计有反馈机制，输出设备在接收到信息后需要有ACK，否则树莓派会认为此次控制不成功。
 </details>
+
+### 广域网MQTT配置(可选)
+
+采用中国移动ONENet的MQTT服务器，实现在广域网下与家庭助手通信。
+
+PI-Assistant共订阅三个topic：Input（实现对输入设备数据的改写）、Output（实现对输出设备的控制）、message_pi（用于消息的传递，即远程通信）
+
+PI-Assistant会将message_pi传来的消息进过和本地消息几乎同样的处理，而后将返回结果发送到名为“message_endpoint"的主题上。
+
+例如，在MQTT手机端publish主题为“Output”，内容为"dev_demo:True”的消息，即可打开设备dev_demo的Led灯。提前订阅“message_endpoint”，向主题message_pi发送“你好”，稍后将会在“message_endpoint”上收到“你好，我是晓晓智能助手...”，具体实现参考 ```mqtt_wlan.py```以及```chat.py```。
+
+中国移动MQTT服务器的配置方法：onenet -> 开发者中心 -> 全部产品服务 -> 多协议接入 -> MQTT（旧版）-> 添加产品 -> 添加设备 
 
 <br>
 
@@ -163,8 +186,10 @@ python server.py #主程序
 
 ## ✏️ 待实现功能
 
-- 低功耗Wifi外设硬件开发，完善外设控制
+- 低功耗Wifi外设硬件开发
 
-- 实现设备外网远程控制（MQTT）
+- 树莓派助手与手机远程协同（类似钢铁侠中的贾维斯）
+
+- 利用公网服务器解决树莓派IP配置繁琐问题，APP制作
 
 - 对接HomeAssist（长期目标）
