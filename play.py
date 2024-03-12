@@ -27,6 +27,9 @@ def play(filename, volume=config.get("general_volume"), samplerate=16000):
     samples = (samples * volume).astype(np.int16)
     
     # 播放音频
-    sd.play(samples, samplerate=samplerate)
-    sd.wait()
+    try:
+        sd.play(samples, samplerate=samplerate)
+        sd.wait()
+    except Exception as e:
+        print(f"Error occurred while playing {filename}: {e}")
     flag=0

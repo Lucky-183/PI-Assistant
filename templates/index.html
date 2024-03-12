@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
+
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>语音助手配置</title>
     <style>
         body {
@@ -9,78 +11,327 @@
             padding: 20px;
             color: #333;
         }
-
+        
         .container {
             max-width: 600px;
             margin: auto;
             background: white;
             padding: 20px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
         }
-
+        
         label {
             font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
         }
-
+        
         div {
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
-
-        input[type="text"], input[type="checkbox"] {
+        
+        input[type="text"],
+        input[type="checkbox"],
+        button {
             margin-top: 5px;
         }
-
-        input[type="text"] {
+        
+        input[type="text"],
+        select {
             width: 100%;
-            padding: 8px;
-            margin: 6px 0 10px;
+            padding: 8px 12px;
+            margin: 8px 0;
             display: inline-block;
             border: 1px solid #ccc;
+            border-radius: 4px;
             box-sizing: border-box;
         }
-
+        
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        button:hover {
+            background-color: #45a049;
+        }
+        /* 基础样式 */
+        
+        #answer {
+            display: inline-block;
+            /* 或者 block，取决于你需要 */
+            background-color: #f0f0f0;
+            /* 轻灰色背景，增强可读性 */
+            padding: 8px;
+            border-radius: 4px;
+            /* 圆角边界 */
+            border: 1px solid #ddd;
+            /* 细边框 */
+            min-height: 20px;
+            /* 最小高度 */
+            width: auto;
+            /* 自动宽度 */
+            max-width: 100%;
+            /* 确保在小屏幕上不会超出容器 */
+            overflow-wrap: break-word;
+            /* 确保长文本不会溢出 */
+        }
+        
+        .flex-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        #quick_commands_list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        #quick_commands_list li {
+            padding: 8px;
+            margin-top: 5px;
+            background-color: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        #quick_commands_list li:hover {
+            background-color: #e9e9e9;
+        }
+        
         input[type="checkbox"] {
+            transform: scale(1.2);
             margin-right: 10px;
+            vertical-align: middle;
+        }
+        /* 使选择框和文本输入框的大小一致 */
+        
+        .select-input,
+        .text-input {
+            flex-grow: 1;
+            /* 让输入框和选择框占据可用空间 */
+            width: auto;
+            /* 覆盖之前的100%宽度 */
+            margin-bottom: 9px;
+            /* 如果你想要减少底部的间距 */
+        }
+        
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            /* 允许项目在需要时换行 */
+            align-items: center;
+            /* 垂直居中对齐 */
+            gap: 20px;
+            /* 设置复选框之间的间隔 */
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            /* 确保复选框和标签垂直居中 */
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                /* width: 100%; */
+                /* 让容器充满整个屏幕宽度 */
+                margin: 0;
+                box-shadow: none;
+                width: calc(100% - 40px);
+                /* 减去左右的padding */
+                padding: 20px;
+            }
+            .flex-container,
+            .checkbox-group {
+                flex-direction: column;
+                /* 在小屏幕上垂直堆叠元素 */
+                align-items: stretch;
+                /* 拉伸子元素填满容器宽度 */
+                gap: 10px;
+                /* 调整间距 */
+            }
+            input[type="text"],
+            select,
+            .select-input,
+            .text-input {
+                width: 100%;
+                /* 在小屏幕上调整输入框的宽度 */
+            }
+            .checkbox-container {
+                justify-content: space-between;
+                /* 分散对齐复选框和标签 */
+            }
+            label,
+            button,
+            input[type="checkbox"] {
+                width: 100%;
+                /* 让标签、按钮和复选框填满整个容器宽度 */
+                text-align: center;
+                /* 居中对齐文本 */
+                margin-top: 10px;
+                /* 增加顶部间距 */
+            }
+            #quick_commands_list li {
+                display: block;
+                /* 在小屏幕上块级显示列表项 */
+            }
+            #answer {
+                padding: 5px;
+                /* 在小屏幕上减小填充 */
+                font-size: 14px;
+                /* 如果需要，可减小字体大小 */
+            }
         }
     </style>
-        <script>
+    <script>
         function updateConfig(key, value) {
             fetch('/update_config', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ [key]: value })
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log('Success:', data);
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        [key]: value
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    console.log('Success:', data);
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
         }
+        // 函数：从服务器获取最新的配置并更新页面
+        function fetchLatestAnswer() {
+            fetch('/get_answer')
+                .then(response => response.json())
+                .then(data => {
+                    // 更新页面上的 'answer' 值
+                    if (document.getElementById('answer') && data.answer !== null) {
+                        document.getElementById('answer').textContent = data.answer;
+                    }
+                })
+                .catch((error) => {
+                    console.error('Error:', error);
+                });
+        }
+
+        // 每5秒钟获取一次最新的 'answer'
+        setInterval(fetchLatestAnswer, 3000);
+
+        // 加载现有的快捷命令
+        function loadQuickCommands() {
+            // 这里假设 '/get_quick_commands' 返回命令的数组
+            fetch('/get_quick_commands')
+                .then(response => response.json())
+                .then(commands => {
+                    const select = document.getElementById('quick_commands_select');
+                    select.innerHTML = '<option value="">选择快捷命令</option>'; // 添加一个默认选项
+                    commands.forEach((command) => {
+                        const option = document.createElement('option');
+                        option.value = command;
+                        option.textContent = command;
+                        select.appendChild(option);
+                    });
+                });
+        }
+
+        function setCommand(command) {
+            const commandInput = document.getElementById('command');
+            commandInput.value = command; // 设置命令
+            commandInput.dispatchEvent(new Event('change')); // 手动触发 onchange 事件
+        }
+
+        // 添加新的快捷命令
+        function addNewCommand() {
+            const newCommand = document.getElementById('new_command').value;
+            fetch('/add_quick_command', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        command: newCommand
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        loadQuickCommands(); // 重新加载快捷命令
+                    }
+                });
+            newCommand.value = ''; // 清空文本框内容
+        }
+
+        // // 从列表中删除快捷命令
+        // function removeCommand(index) {
+        //     fetch('/remove_quick_command', {
+        //             method: 'POST',
+        //             headers: {
+        //                 'Content-Type': 'application/json',
+        //             },
+        //             body: JSON.stringify({
+        //                 index: index
+        //             })
+        //         })
+        //         .then(response => response.json())
+        //         .then(data => {
+        //             if (data.success) {
+        //                 loadQuickCommands(); // 重新加载快捷命令
+        //             }
+        //         });
+        // }
+        // 页面加载时加载快捷命令
+        document.addEventListener('DOMContentLoaded', loadQuickCommands);
     </script>
 </head>
+
 <body>
     <div class="container">
         <h1>语音助手配置</h1>
+        <div class="flex-container">
+            <select id="quick_commands_select" onchange="setCommand(this.value)" class="select-input">
+                <option value="">选择快捷命令</option>
+                <!-- 快捷命令选项将在这里动态加载 -->
+            </select>
+            <input type="text" id="new_command" name="new_command" placeholder="添加快捷指令" class="text-input">
+            <button onclick="addNewCommand()">添加</button>
+        </div>
         <form>
-            {% for key, value in config.items() %}
-                <div>
-                    <label for="{{ key }}">{{ key }}:</label>
-                    {% if value is sameas true or value is sameas false %}
-                        <input type="checkbox" id="{{ key }}" name="{{ key }}"
-                               {% if value %} checked {% endif %}
-                               onchange="updateConfig(this.name, this.checked)">
-                    {% else %}
-                        <input type="text" id="{{ key }}" name="{{ key }}" value="{{ value }}"
-                               onchange="updateConfig(this.name, this.value)">
-                    {% endif %}
-                </div>
-            {% endfor %}
-        </form>
-    </div>
-</body>
-</html>
+            <!-- 渲染非复选框（如文本输入）配置项 -->
+            {% for key, value in config.items() %} {% if key != 'answer' and value is not sameas true and value is not sameas false %}
+            <div>
+                <label for="{{ key }}">{{ key }}:</label>
+                <input type="text" id="{{ key }}" name="{{ key }}" value="{{ value }}" onchange="updateConfig(this.name, this.value)">
+            </div>
+            {% endif %} {% endfor %}
 
+            <!-- 单独渲染复选框配置项 -->
+            <div class="checkbox-group">
+                {% for key, value in config.items() %} {% if value is sameas true or value is sameas false %}
+                <div class="checkbox-container">
+                    <input type="checkbox" id="{{ key }}" name="{{ key }}" class="styled-checkbox" {% if value %} checked {% endif %} onchange="updateConfig(this.name, this.checked)">
+                    <label for="{{ key }}">{{ key }}</label>
+                </div>
+                {% endif %} {% endfor %}
+            </div>
+        </form>
+        <!-- 'answer' 显示在所有其他配置项下面 -->
+        <div>
+            <label for="answer">回复:</label>
+            <span id="answer">{{ config.get('answer', '') }}</span>
+        </div>
+    </div>
+
+</body>
+
+</html>

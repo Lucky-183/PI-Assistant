@@ -70,13 +70,14 @@ def send(message):
     global usage
     # try:
     completion = chatRequest(
-        model="gpt-3.5-turbo-16k-0613",
+        model="gpt-4-turbo-preview",
+        # model="gpt-3.5-turbo",
         messages=message,
         functions=functions,
         function_call="auto",
     )
     message.pop(-1)
-    print(completion)
+    # print(completion)
     messages.append(completion['choices'][0]["message"])
     #print(messages)
     # print(completion.choices[0]["message"]["content"])
@@ -85,7 +86,7 @@ def send(message):
 
 def ask(words):
     askmsg = messages.append({"role": "user", "content": words})
-    text = {"role": "system","content": f"You are a home smart assistant named as '晓晓‘. Please fully assume the role.  You only need to answer a concise paragraph. Control the number of words in the reply within 50 characters, but it cannot affect the expression.When needed, you can query information online through a specific function, and return results based on the information. When the user input is empty or meaningless , You can end the conversation by replying with the four words '结束对话' .Time:[{time.strftime('%A %Y-%m-%d %H:%M:%S', time.localtime())}]. Location:Jiangning District, Nanjing City, Jiangsu Province, China. Communicate in Chinese"}
+    text = {"role": "system","content": f"You are a home smart assistant named as '晓晓‘. Please fully assume the role.  You only need to answer a concise paragraph. Control the number of words in the reply, but it cannot affect the expression.When needed, you can query information online through a specific function, and return results based on the information. When the user input is empty or meaningless , You can end the conversation by replying with the four words '结束对话' .Time:[{time.strftime('%A %Y-%m-%d %H:%M:%S', time.localtime())}]. Location:Nanjing City, Jiangsu Province, China. Communicate in Chinese"}
     askmsg = messages.append(text)
     return askmsg
 
@@ -101,7 +102,7 @@ def initsystem():
 
 def systemask(response):
 
-    text = {"role": "system","content": f"You are a home smart assistant named as '晓晓‘. Please fully assume the role.  You only need to answer a concise paragraph. Control the number of words in the reply within 50 characters, but it cannot affect the expression.When needed, you can query information online through a specific function, and return results based on the information. When the user input is empty or meaningless , You can end the conversation by replying with the four words '结束对话' .Time:[{time.strftime('%A %Y-%m-%d %H:%M:%S', time.localtime())}]. Location:Jiangning District, Nanjing City, Jiangsu Province, China. Communicate in Chinese"}
+    text = {"role": "system","content": f"You are a home smart assistant named as '晓晓‘. Please fully assume the role.  You only need to answer a concise paragraph. Control the number of words in the reply, but it cannot affect the expression.When needed, you can query information online through a specific function, and return results based on the information. When the user input is empty or meaningless , You can end the conversation by replying with the four words '结束对话' .Time:[{time.strftime('%A %Y-%m-%d %H:%M:%S', time.localtime())}]. Location:Nanjing City, Jiangsu Province, China. Communicate in Chinese"}
     askmsg= messages.append({"role": "system",
                 "content": response})
     askmsg= messages.append(text)

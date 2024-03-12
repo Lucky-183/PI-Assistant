@@ -9,7 +9,9 @@ from threading import Thread
 import chat
 from config import config
 from const_config import music_enable,schedule_enable,udp_enable
-
+import logging
+log = logging.getLogger('werkzeug')
+log.setLevel(logging.ERROR)  # 只记录错误消息
 if music_enable:
     import if_music
 if schedule_enable:
@@ -56,6 +58,41 @@ def update_config():
                     pass
         config.set(**{key: value})
     return jsonify(success=True)
+
+last_answer=None
+
+@app.route('/get_answer', methods=['GET'])
+def get_answer():
+    global last_answer  # 使用全局变量来跟踪上一次的答案
+    current_answer = config.params.get('answer', '')  # 获取当前的答案
+    # 检查答案是否有变化
+    if current_answer != last_answer:
+        last_answer = current_answer  # 更新上一次的答案
+        return jsonify(answer=current_answer)  # 发送新答案
+    else:
+        return jsonify(answer=None)  # 无变化时不发送答案
+
+quick_commands = ["wake","终止程序","下一首。"]
+
+@app.route('/get_quick_commands', methods=['GET'])
+def get_quick_commands():
+    return jsonify(quick_commands)
+
+@app.route('/add_quick_command', methods=['POST'])
+def add_quick_command():
+    command = request.json.get('command')
+    if command and command not in quick_commands:
+        quick_commands.append(command)
+        return jsonify(success=True)
+    return jsonify(success=False)
+
+@app.route('/remove_quick_command', methods=['POST'])
+def remove_quick_command():
+    index = request.json.get('index')
+    if 0 <= index < len(quick_commands):
+        del quick_commands[index]
+        return jsonify(success=True)
+    return jsonify(success=False)
 
 @app.route('/cookie')
 def chang():

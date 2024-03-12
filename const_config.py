@@ -19,6 +19,7 @@ music_enable=False  #是否开启音乐功能(需要qq音乐的cookie,并启动Q
 qqmusicpath='/home/pi/xiaoxiao/QQMusicApi' #MusicApi位置(如果开启音乐模块)
 qqid=''  #填写登录QQ音乐的QQ号(如果开启音乐模块,必填)
 dev_enable=False  #是否开启外设控制功能(需要安装mosquito服务器，配置对应外设)
+wlan_enable=False  #是否开启广域网控制
 schedule_enable=False #是否开启日程提醒功能(需要配置mysql)
 udp_enable=False #是否开启无线模块外设唤醒(没有无线模块就不用打开)
 UdpbroadcastAdd='192.168.31.255' #UDP广播地址，用于使用无线模块外设唤醒助手

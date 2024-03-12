@@ -7,8 +7,10 @@ parmas = {
     "notify_enable": False,
     "chat_enable": False,
     "rec_enable": False,  # wifi module
+    "mqtt_message": False,
     # 参量
     "command": "",
+    "answer": "晓晓已上线，有什么可以帮您的吗？",
     "music_volume": 0.25,
     "general_volume": 0.5,
     "wakebyhw": False,
@@ -32,6 +34,7 @@ tracked_params = [
 ]
 # WebUI可修改的参数
 allow_params = [
+    "answer",
     "command",
     "music_volume",
     "general_volume",

@@ -1,5 +1,5 @@
 import sys
-from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable,use_openai,dev_enable
+from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable,use_openai,dev_enable,wlan_enable
 
 if snowboy_enable:
     from const_config import snowboypath
@@ -24,6 +24,9 @@ if dev_enable:
     import dev_control
     import if_devControl
 
+if wlan_enable:
+    import mqtt_wlan
+
 import speechpoint
 
 from tts import ssml_wav
@@ -38,6 +41,8 @@ import os
 import arcade
 
 from threading import Thread
+
+import asyncio
 
 import time
 
@@ -168,8 +173,10 @@ def work():
         except Exception as e:
             print(e)
             play('Sound/recoerror.wav')
-            allow_running = False
-            next=False
+            next = False
+            allow_running = True
+            running = False
+            return None
 
     if allow_running:
         text_enable = False
@@ -247,7 +254,11 @@ def work():
             gpt.ask(text)
         try:
             if use_openai:
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                #异步适配ddg
                 reply = gpt.deal()
+                loop.close()
             else:
                 reply=sparkApi.ask(text)
 
@@ -262,11 +273,21 @@ def work():
         else:
             if use_openai:
                 print(reply['content'])
+                config.set(answer=reply['content'])
             else:
                 print(reply)
+                config.set(answer=reply)
 
         if use_openai and reply['content'].find('结束对话') != -1:
             next = False
+
+        if config.get("mqtt_message") is True:
+            mqtt_wlan.wlan_client.send_message(config.get("answer"))
+            config.set(mqtt_message=False)
+            next = False
+            allow_running = True
+            running = False
+            
 
     if allow_running:
         try:

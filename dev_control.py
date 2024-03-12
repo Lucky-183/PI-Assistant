@@ -28,15 +28,18 @@ class MQTTClient:
         self.client.username_pw_set(USERNAME, PASSWORD)
         self.client.on_connect = self.on_connect
         self.client.on_message = self.on_message
-        self.client.connect(MQTT_BROKER, MQTT_PORT, 60)
-        self.dev_status = {dev: config.get(dev) for dev in devices}  # 设备字典，初始状态为None
-        self.dev_ack_received = {dev: Event() for dev in devices}
+        try:
+            self.client.connect(MQTT_BROKER, MQTT_PORT, 60)
+            self.dev_status = {dev: config.get(dev) for dev in devices}  # 设备字典，初始状态为None
+            self.dev_ack_received = {dev: Event() for dev in devices}
 
-        # 启动一个线程来处理MQTT网络通信
-        threading.Thread(target=self.client.loop_start, daemon=True).start()
+            # 启动一个线程来处理MQTT网络通信
+            threading.Thread(target=self.client.loop_start, daemon=True).start()
 
-        # 启动状态监测线程
-        threading.Thread(target=self.monitor_dev_status, daemon=True).start()
+            # 启动状态监测线程
+            threading.Thread(target=self.monitor_dev_status, daemon=True).start()
+        except Exception as e:
+            print(f"Could not connect to MQTT server: {e}")
 
     def on_connect(self, client, userdata, flags, rc):
         print("MQTT Client：Connected with result code "+str(rc))
@@ -55,8 +58,11 @@ class MQTTClient:
                     self.dev_ack_received[dev].set()
                     print(f"Ack received from {dev}.")
                 else:
-                    sensor_value = msg.payload.decode() == 'True'
-                    status_manager.set_status(**{dev:sensor_value})
+                    if msg.payload.decode() == 'True' or 'False':
+                        sensor_value = msg.payload.decode() == 'True'
+                    else:
+                        sensor_value = msg.payload.decode()
+                    status_manager.set_status(**{dev:sensor_value}) #输入设备的状态设定
                     client.publish(topics['pub_topic'], "ACK:"+str(sensor_value))
                     print(f"Published ACK:{sensor_value} to {topics['pub_topic']}")
                 break
