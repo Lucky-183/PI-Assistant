@@ -51,6 +51,8 @@ class MQTTWlanClient:
                 if payload.split(':')[0] in devices.keys() and devices[payload.split(':')[0]]["type"] == "output":
                     dev_name = payload.split(':')[0]
                     dev_value = payload.split(':')[1]
+                    if dev_value == "True" or dev_value == "False":
+                        dev_value = dev_value == "True"
                     print("From output device: ", dev_name + " value: ", dev_value)
                     client.publish("message_ack", f"Received {dev_name} value: {dev_value}")
                     config.set(**{dev_name:dev_value})
