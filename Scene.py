@@ -81,10 +81,13 @@ class SceneManager:
                             return False
                 else:
                     # 通用范围比较
-                    if not (value[0] <= state_value <= value[1]):
+                    if not (value[0] <= float(state_value) <= value[1]):
                         return False
             else:
                 # 当条件值是一个特定值
+                if state_value == 'True' or state_value == 'False':
+                        state_value = state_value == 'True'
+                
                 if value is not None and state_value != value:
                     return False
         return True

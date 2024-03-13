@@ -47,24 +47,17 @@ void callback(char* topic, byte* payload, unsigned int length) {
   }
   Serial.println(message);
   
-  if (String(topic) == value_topic) {
-    // 解析消息
-    String message;
-    for (int i = 0; i < length; i++) {
-      message += (char)payload[i];
-    }
-
-    if(message == "True") {
-      digitalWrite(ledPin, HIGH); // 打开LED
-      Serial.println("LED turned ON");
-    } else if(message == "False") {
-      digitalWrite(ledPin, LOW); // 关闭LED
-      Serial.println("LED turned OFF");
-    }
-    
-    // 发送确认消息
-    client.publish(ack_topic, "Ack from ESP32");
+  if(message == "True") {
+    digitalWrite(ledPin, HIGH); // 打开LED
+    Serial.println("LED turned ON");
+  } else if(message == "False") {
+    digitalWrite(ledPin, LOW); // 关闭LED
+    Serial.println("LED turned OFF");
   }
+  
+  // 发送确认消息
+  client.publish(ack_topic, "OK");
+  
 }
 
 void reconnect() {
@@ -76,7 +69,7 @@ void reconnect() {
       Serial.println("connected");
       // 订阅
       client.subscribe(value_topic);
-    } else {
+          } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
       Serial.println(" try again in 5 seconds");

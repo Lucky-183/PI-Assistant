@@ -53,15 +53,21 @@ class MQTTClient:
         #通过msg获取设备名称和消息
         for dev, topics in devices.items():
             if msg.topic in topics['sub_topic']:
-                #如果以ack结尾
+                #如果以ack结尾，表示是输出设备
                 if msg.topic.endswith('ack'):
-                    self.dev_ack_received[dev].set()
-                    print(f"Ack received from {dev}.")
-                else:
-                    if msg.payload.decode() == 'True' or 'False':
-                        sensor_value = msg.payload.decode() == 'True'
+                    # 如果收到的消息是同步消息，更新设备状态
+                    if msg.payload.decode().startswith('sync'):
+                        sync_value = msg.payload.decode().split(":")[1]
+                        if sync_value == "True" or sync_value == "False":
+                            sync_value = sync_value == "True"
+                        config.set(**{dev: sync_value})
+                        print(f"synced status of {dev} to {msg.payload.decode().split(':')[1]}")
                     else:
-                        sensor_value = msg.payload.decode()
+                        self.dev_ack_received[dev].set()
+                        print(f"Ack received from {dev}.")
+                #否则是输入设备
+                else:
+                    sensor_value = msg.payload.decode()
                     status_manager.set_status(**{dev:sensor_value}) #输入设备的状态设定
                     client.publish(topics['pub_topic'], "ACK:"+str(sensor_value))
                     print(f"Published ACK:{sensor_value} to {topics['pub_topic']}")
