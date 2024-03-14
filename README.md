@@ -9,7 +9,8 @@
 
 - 增加广域网控制支持，采用MQTT协议，实现广域网下的设备控制，消息传递
 - 完善WebUI，增加快捷命令，增加回复窗口
-- GPT版本改指向GPT-4-turbo-preview，并修改提示词
+- 完善星火API，相比GPT可能会有更好的体验
+- GPT版本改指向GPT-4-turbo-preview
 - 适配新版本DDG搜索
 - 增强设备控制通用性和稳定性
 - 删除早期APP，统一采用Web控制
@@ -73,9 +74,9 @@ pip install requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckd
 
 为了使用语音识别以及文字转语音，需要注册微软Azure，获取Azure认知服务的APIkey
 
-### GPT服务
+### GPT服务/星火API
 
-为了生成对话文本，需要注册OpenAI账号，并获取APIkey
+为了生成对话文本，需要注册OpenAI/讯飞星火账号（二选一），并获取APIkey
 
 ### Nodejs安装(可选)
 
