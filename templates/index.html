@@ -253,7 +253,8 @@
 
         // 添加新的快捷命令
         function addNewCommand() {
-            const newCommand = document.getElementById('new_command').value;
+            new_command = document.getElementById('new_command')
+            const newCommand = new_command.value;
             fetch('/add_quick_command', {
                     method: 'POST',
                     headers: {
@@ -267,9 +268,9 @@
                 .then(data => {
                     if (data.success) {
                         loadQuickCommands(); // 重新加载快捷命令
+                        new_command.value = ''; // 清空文本框内容
                     }
                 });
-            newCommand.value = ''; // 清空文本框内容
         }
 
         // // 从列表中删除快捷命令

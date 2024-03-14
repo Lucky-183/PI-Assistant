@@ -80,7 +80,7 @@ class MQTTClient:
                     current_status = config.get(dev)  # config是一个全局的配置状态管理器
                     if current_status != self.dev_status[dev]:
                         # 发布新状态
-                        self.client.publish(topics['pub_topic'], str(current_status))
+                        self.client.publish(topics['pub_topic'], str(current_status), retain=True)
                         print(f"Published {current_status} to {topics['pub_topic']}")
                         # 等待设备响应或超时（假设5秒超时）
                         if not self.dev_ack_received[dev].wait(5):
