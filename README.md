@@ -197,6 +197,9 @@ python server.py #主程序
 
 - 对接HomeAssist（长期目标）
 
+<br>
+
 ## 🎉 其他
 
-- 欢迎提交Issue与Pull Request
+欢迎提交Issue与Pull Request
+
