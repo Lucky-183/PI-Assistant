@@ -195,6 +195,8 @@ def work():
         if if_exit.ifexit(text):
             if use_openai:
                 gpt.save()
+            else:
+                sparkApi.save()
             flag = 0
             next = False
             allow_running = True
@@ -382,6 +384,8 @@ def startchat():
     #os.system('/home/pi/linkbt.sh')
     if use_openai:
         gpt.read()
+    else:
+        sparkApi.read()
     if snowboy_enable is True and config.get("wakebyhw") is True:
         t3 = Thread(target=hotwordBymic.start, args=(hwcallback,))
         t3.setDaemon(True)

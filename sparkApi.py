@@ -10,6 +10,8 @@ from datetime import datetime
 from time import mktime
 from urllib.parse import urlencode
 from wsgiref.handlers import format_date_time
+import os
+import pickle
 
 import websocket  # 使用websocket_client
 from const_config import sparkapi_appid,sparkapi_secret,sparkapi_key
@@ -151,8 +153,8 @@ def main(appid, api_key, api_secret, Spark_url,domain, question):
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
     return answer_temp
 
-
-text =[]
+prom={"role":"system","content":"你是一个家庭智能助手，名字叫“晓晓”。 请充分代入这个角色。 你只需回答一个简洁的段落即可。当用户输入空或无意义时，可以通过回复“结束对话”四个字来结束对话。 地点：中国江苏省南京市。"}
+text =[prom]
 
 # length = 0
 
@@ -172,8 +174,8 @@ def getlength(text):
     return length
 
 def checklen(text):
-    while (getlength(text) > 8000):
-        del text[0]
+    while (getlength(text) > 4000):
+        del text[1]
     return text
     
 def ask(Input):
@@ -181,4 +183,21 @@ def ask(Input):
         answer=main(appid, api_key, api_secret, Spark_url, domain, question)
         getText("assistant",answer)
         return answer
+
+def save():
+    if(os.path.exists('Smessage.data')):
+        os.remove('Smessage.data')
+    with open("Smessage.data", 'wb+') as f:
+        pickle.dump(text, f)
+
+def read():
+    global text
+    if(os.path.exists('Smessage.data')):
+        with open("Smessage.data", 'rb+') as f:
+            text=pickle.load(f)
+
+if __name__ == '__main__':
+    while 1:
+        ask(input("输入："))
+        print(text)
 
