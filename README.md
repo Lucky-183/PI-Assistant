@@ -13,6 +13,7 @@
 - 适配新版本DDG搜索
 - 增强设备控制通用性和稳定性
 - 删除早期APP，统一采用Web控制
+- 添加requirements.txt，列出运行版本号
 
 <details>
 
@@ -65,7 +66,7 @@
 ### Python模块安装
 
 ```bash
-pip install requests arcade RPi.GPIO pydub numpy wave sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt
+pip install requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt
 ```
 
 ### Azure认知服务
