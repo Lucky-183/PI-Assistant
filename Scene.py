@@ -29,7 +29,7 @@ class StatusManager:
                 raise ValueError(f"Unknown status key: {key}")
         # 如果有状态变化且存在回调函数，则调用回调函数并传入发生变化的状态
         if changed_states and self.callback:
-            self.callback(self.states)
+            self.callback(self.states, changed_states)
 
     def get_status(self, key):
         return self.states.get(key, None)
@@ -43,9 +43,9 @@ class SceneManager:
         self.scene_conditions = scene_conditions
         self.current_scene = "Unknown Scene"
 
-    def check_scenes(self, states):
+    def check_scenes(self, states, changed_states):
         for scene, conditions in self.scene_conditions.items():
-            if self._scene_match(states, conditions):
+            if self._scene_match(states, conditions) and any(key in changed_states for key in conditions):
                 if scene != self.current_scene:
                     self.current_scene = scene
                     return scene
@@ -93,8 +93,8 @@ class SceneManager:
         return True
 
 
-def on_status_change(states):
-    scene = scene_manager.check_scenes(states)
+def on_status_change(states, changed_states=None):
+    scene = scene_manager.check_scenes(states, changed_states if changed_states else {})
     if scene:
         deal_condition(scene)
 

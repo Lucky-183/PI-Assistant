@@ -21,8 +21,8 @@ appid = sparkapi_appid     #填写控制台中获取的 APPID 信息
 api_secret = sparkapi_secret   #填写控制台中获取的 APISecret 信息
 api_key = sparkapi_key   #填写控制台中获取的 APIKey 信息
 
-domain = "generalv3"
-Spark_url = "ws://spark-api.xf-yun.com/v3.1/chat"  # v3.0环境的地址
+domain = "generalv3.5"
+Spark_url = "ws://spark-api.xf-yun.com/v3.5/chat"  # v3.5环境的地址
 class Ws_Param(object):
     # 初始化
     def __init__(self, APPID, APIKey, APISecret, Spark_url):

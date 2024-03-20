@@ -10,9 +10,9 @@
 - 增加广域网控制支持，采用MQTT协议，实现广域网下的设备控制，消息传递
 - 完善WebUI，增加快捷命令，增加回复窗口
 - 完善星火API，相比GPT可能会有更好的体验
-- GPT版本改指向GPT-4-turbo-preview
+- 星火版本指向3.5，GPT版本改指向GPT-4-turbo-preview
 - 适配新版本DDG搜索
-- 增强设备控制通用性和稳定性
+- 增强设备控制通用性和稳定性，完善场景逻辑
 - 删除早期APP，统一采用Web控制
 - 添加requirements.txt，列出运行版本号
 
@@ -69,6 +69,8 @@
 ```bash
 pip install requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt
 ```
+
+具体库版本可参考```requirements.txt```文件
 
 ### Azure认知服务
 
