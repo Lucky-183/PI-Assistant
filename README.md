@@ -197,6 +197,8 @@ python server.py #主程序
 
 - 实现场景配置热重载，场景Web调参
 
+- 提供讯飞认知服务接口（功能同Azure认知服务）
+
 - 对接HomeAssist（长期目标）
 
 <br>
