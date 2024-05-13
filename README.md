@@ -112,13 +112,13 @@ GRANT ALL ON schedule.* TO 'remote'@'%';
 
 ### 场景、外设及自动化配置(可选)
 
-当前实现的所有参数监听及修改都基于多线程下的循环执行（轮询），因此可以通过在server.py添加新的线程插入你的外设控制文件。具体步骤为：在 config.py 中添加变量，编写专用外设控制文件，在专用外设控制文件监听（轮询）变量，执行自定义动作。在任意文件中调用config.set()即可触发动作。
+当前实现的所有参数监听及修改都基于多线程下的循环执行（轮询），因此可以通过在 ```server.py``` 添加新的线程插入你的外设控制文件。具体步骤为：在 ```config.py``` 中添加变量，编写专用外设控制文件，在专用外设控制文件监听（轮询）变量，执行自定义动作。在任意文件中调用 ```config.set()``` 即可触发动作。
 
-例如，在 server.py 新增一个线程用于处理控制HomeAssistant设备的消息 t7，在config.py中定义变量 "HA_light_demo": False ，在hass_light_demo.py中处理消息和执行动作。如果要增加语音控制，在 if_devControl.py中添加对应的语音指令和 config.set() 即可。
+例如，在 ```server.py``` 新增一个线程用于处理控制HomeAssistant设备的消息 ```t7``` ，在 ```config.py``` 中定义变量 ```"HA_light_demo": False```，在 ```hass_light_demo.py``` 中处理消息和执行动作。如果要增加语音控制，在 ```if_devControl.py``` 中添加对应的语音指令和 ```config.set()``` 即可。
 
-支持外接无线设备，作为设备的数据流转和控制中心，可达到极高的可扩展性。可在 config.py 中添加外设变量，在 dev_control.py 中定义设备类型，订阅主题和推送主题，同时，在wifi设备上（例如esp32）配置对应的主题，在任意文件中调用config.set()即可触发外设动作（将会发送值到预先定义的主题中，外设接收此值响应动作）。
+支持外接无线设备，作为设备的数据流转和控制中心，可达到极高的可扩展性。可在 ```config.py``` 中添加外设变量，在 ```dev_control.py``` 中定义设备类型，订阅主题和推送主题，同时，在wifi设备上（例如esp32）配置对应的主题，在任意文件中调用 ```config.set()``` 即可触发外设动作（将会发送值到预先定义的主题中，外设接收此值响应动作）。
 
-进一步的，实现自动化，则在 Scene_conf.py 中定义状态变量并设置触发场景、配置相应的动作。调用修改状态变量函数 status_manager.set_status() 时会自动回调检查是否符合场景预设，若是则执行对应动作。（注：无线外设扩展现仅支持MQTT协议设备）
+进一步的，实现自动化，则在 ```Scene_conf.py``` 中定义状态变量并设置触发场景、配置相应的动作。调用修改状态变量函数 ```status_manager.set_status()``` 时会自动回调检查是否符合场景预设，若是则执行对应动作。（注：无线外设扩展现仅支持MQTT协议设备）
 
 <details>
 <br>
@@ -142,9 +142,9 @@ password_file /etc/mosquitto/passwd
 
 此控制方案用于手动控制，通过文字指令或语音指令直接修改配置管理器的变量，控制设备。
 
-外设控制配置文件包括以下几个文件：dev_control.py(定义所有设备) ,config.py（定义输出设备） ,Scene_conf.py(定义输入设备以及场景)
+外设控制配置文件包括以下几个文件：```dev_control.py```(定义所有设备) ,```config.py```（定义输出设备） ,```Scene_conf.py```(定义输入设备以及场景)
 
-文件中提供了一个示例，sensor_demo作为输入设备，dev_demo作为输出设备，当sensor_demo发送True（False）时，dev_demo点亮（关闭）板载LED。硬件采用Esp32，相关的硬件代码提供在```mqtt_demo```文件夹。
+文件中提供了一个示例，```sensor_demo```为输入设备，```dev_demo```作为输出设备，当```sensor_demo```发送```True（False）```时，```dev_demo```点亮（关闭）板载LED。硬件采用Esp32，相关的硬件代码提供在```mqtt_demo```文件夹。
 
 代码设计有反馈机制，输出设备在接收到信息后需要有ACK，否则树莓派会认为此次控制不成功。
 </details>
@@ -155,9 +155,9 @@ password_file /etc/mosquitto/passwd
 
 PI-Assistant共订阅三个topic：Input（实现对输入设备数据的改写）、Output（实现对输出设备的控制）、message_pi（用于消息的传递，即远程通信）
 
-PI-Assistant会将message_pi传来的消息进过和本地消息几乎同样的处理，而后将返回结果发送到名为“message_endpoint"的主题上。
+PI-Assistant会将 message_pi 传来的消息进过和本地消息几乎同样的处理，而后将返回结果发送到名为 “message_endpoint" 的主题上。
 
-例如，在MQTT手机端publish主题为“Output”，内容为"dev_demo:True”的消息，即可打开设备dev_demo的Led灯。提前订阅“message_endpoint”，向主题message_pi发送“你好”，稍后将会在“message_endpoint”上收到“你好，我是晓晓智能助手...”，具体实现参考 ```mqtt_wlan.py```以及```chat.py```。
+例如，在MQTT手机端Publish主题为 “Output”，内容为```"dev_demo:True”```的消息，即可打开设备```dev_demo```的Led灯。提前订阅 “message_endpoint”，向主题 message_pi 发送```“你好”```，稍后将会在 “message_endpoint” 上收到```“你好，我是晓晓智能助手...”```，具体实现参考 ```mqtt_wlan.py```以及```chat.py```。
 
 中国移动MQTT服务器的配置方法：onenet -> 开发者中心 -> 全部产品服务 -> 多协议接入 -> MQTT（旧版）-> 添加产品 -> 添加设备 
 
