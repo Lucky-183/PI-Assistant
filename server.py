@@ -8,7 +8,7 @@ import arcade
 from threading import Thread
 import chat
 from config import config
-from const_config import music_enable,schedule_enable,udp_enable
+from const_config import music_enable,schedule_enable,udp_enable,hass_demo_enable
 import logging
 log = logging.getLogger('werkzeug')
 log.setLevel(logging.ERROR)  # 只记录错误消息
@@ -216,5 +216,10 @@ if __name__ == '__main__':
     if schedule_enable:
         t6=Thread(target=schedule.timer)
         t6.start()
+    
+    if hass_demo_enable:
+        import hass_light_demo
+        t7=Thread(target=hass_light_demo.handle)
+        t7.start()
 
     app.run(host='0.0.0.0')

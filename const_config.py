@@ -22,6 +22,7 @@ dev_enable=False  #是否开启外设控制功能(需要安装mosquito服务器�
 wlan_enable=False  #是否开启广域网控制
 schedule_enable=False #是否开启日程提醒功能(需要配置mysql)
 udp_enable=False #是否开启无线模块外设唤醒(没有无线模块就不用打开)
+hass_demo_enable=False #用于演示HomeAssistant的交互，需要配置HomeAssistant。
 UdpbroadcastAdd='192.168.31.255' #UDP广播地址，用于使用无线模块外设唤醒助手
 
 

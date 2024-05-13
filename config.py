@@ -20,6 +20,8 @@ parmas = {
     "MusicPlay": False,
     # 外设
     "dev_demo": False,
+    # HASS外设
+    "HA_light_demo": False,
     # ... 可以添加更多的参数
 }
 # 这里列出需要追踪的参数
