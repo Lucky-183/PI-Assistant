@@ -54,6 +54,8 @@ import if_time
 
 from play import play
 
+from loguru import logger
+
 chatsound = None
 chatplayer = None
 next = False
@@ -76,7 +78,7 @@ def hwcallback():
         return False
     if running == True:
         actived = 2  # 运行时激活
-        print('interrupt')
+        logger.warning('Conversation was interrupted')
     else:
         actived = 1  # 休眠激活
 
@@ -88,7 +90,7 @@ def admin():
             config.set(chat_enable=False)
         if actived == 3 or (running is False and config.get("notify_enable") is False and (actived == 1 or (next is True and chatsound and chatplayer and chatsound.is_complete(chatplayer)))):
             if actived == 3:
-                print('error in chat,thread dead')
+                logger.error('Error in chat, The program will exit soon')
                 play('Sound/exit.wav')
                 os._exit(0)
             t1 = Thread(target=work)
@@ -96,7 +98,7 @@ def admin():
             config.set(chat_enable=True)
 
             t1.start()
-            print('start new task ')
+            logger.info('start new conversation')
         if actived == 2:
             allow_running = False
             actived = 1
@@ -109,18 +111,18 @@ def admin():
                     chatsound.stop(chatplayer)
                     times=0
                 except:
-                    print('stop sound wrong in admin')
+                    logger.warning('stop sound wrong in chat')
                 else:
-                    print('chatsound has been stoped by admin func')
+                    logger.info('chatsound has been stoped by admin func in chat')
             else:
                 times=times+1
                 if times>=170:
                     try:
                         chatsound.stop(chatplayer)
                     except:
-                        print('stop sound wrong in admin(time)')
+                        logger.warning('stop sound wrong in chat(time)')
                     else:
-                        print('chatsound has been stoped by admin func(time)')
+                        logger.info('chatsound has been stoped by admin func in chat(time)')
                     times = 0
         time.sleep(0.5)
 
@@ -132,18 +134,18 @@ def work():
 
     if (chatplayer and chatsound and chatsound.is_playing(chatplayer)):
         try:
-            print('stoping chatsound')
+            logger.info('stoping chatsound')
             chatsound.stop(chatplayer)
             times=0
         except:
-            print('stop chatsound wrong')
+            logger.warning('stop chatsound wrong')
 
     actived = 0
     if allow_running and ((text_enable or manual_enable) is False):
         try:
             play('Sound/ding.wav')
 
-            print('prepare to start record')
+            logger.info('prepare to start record')
 
             speechpoint.record_file()
 
@@ -152,7 +154,7 @@ def work():
             play('Sound/dong.wav')
 
         except Exception as e:
-            print(e)
+            logger.warning(e)
             play('Sound/ding.wav')
             play('Sound/quit.wav')
             next = False
@@ -169,9 +171,9 @@ def work():
                 text = azure_reco.recognize()
             else:    
                 text = vosk_reco.recognize()+'。'
-            print(text)
+            logger.info(f"Recongnize result:{text}")
         except Exception as e:
-            print(e)
+            logger.warning(e)
             play('Sound/recoerror.wav')
             next = False
             allow_running = True
@@ -184,7 +186,6 @@ def work():
     if allow_running:
         # 判断是否退出
 
-        # print('in function text',text)
         if if_exit.ifend(text):
             next = False
             allow_running = True
@@ -217,11 +218,11 @@ def work():
         if music_enable and if_music.musicdetect(text):
             if (chatplayer and chatsound and chatsound.is_playing(chatplayer)):
                 try:
-                    print('stoping chatsound(if_music)')
+                    logger.info('stoping chatsound(if_music)')
                     chatsound.stop(chatplayer)
                     times=0
                 except:
-                    print('stop chatsound wrong')
+                    logger.warning('stop chatsound wrong')
             next = False
             allow_running = True
             running = False
@@ -240,11 +241,11 @@ def work():
         if if_time.timedetect(text):
             if (chatplayer and chatsound and chatsound.is_playing(chatplayer)):
                 try:
-                    print('stoping chatsound(if_time)')
+                    logger.info('stoping chatsound(if_time)')
                     chatsound.stop(chatplayer)
                     times=0
                 except:
-                    print('stop chatsound wrong')
+                    logger.warning('stop chatsound wrong')
             next = False
             allow_running = True
             running = False
@@ -266,7 +267,7 @@ def work():
 
         except Exception as e:
 
-            print('error:', e)
+            logger.error(f'GPT error:{e}')
             play('Sound/ding.wav')
             play('Sound/gpterror.wav')
             allow_running = True
@@ -274,10 +275,10 @@ def work():
             return None
         else:
             if use_openai:
-                print(reply['content'])
+                logger.info(reply['content'])
                 config.set(answer=reply['content'])
             else:
-                print(reply)
+                logger.info(reply)
                 config.set(answer=reply)
 
         if use_openai and reply['content'].find('结束对话') != -1:
@@ -299,9 +300,9 @@ def work():
                 ssml_wav(reply['content'],'Sound/answer.wav')
             else:
                 ssml_wav(reply,'Sound/answer.wav')
-            print('ssml complete!')
+            logger.info('tts complete!')
         except Exception as e:
-            print(e)
+            logger.warning(e)
             play('Sound/ttserror.wav')
             allow_running = False
         play('Sound/ding.wav')
@@ -309,7 +310,7 @@ def work():
         chatsound = arcade.Sound('Sound/answer.wav')
         chatplayer = chatsound.play()
         time.sleep(0.5)
-    print('A conversation end')
+    logger.info('A conversation end')
     allow_running = True
     running = False
     return None
@@ -320,12 +321,12 @@ def inter():
     while (1):
         cmd = config.get("command")
         if cmd == 'wake':
-            print('find words wake')
+            logger.info('find words wake')
             actived = 1
             config.set(command='')
             continue
         elif cmd == 'get_audio_complete':
-            print('find words get_audio_complete')
+            logger.info('find words get_audio_complete')
             manual_enable=True
             next_enable=False
             hwcallback()
@@ -340,7 +341,7 @@ def inter():
                 hotwordBymic.terminate()
                 config.set(wakebyhw=False, hw_started=False)  # 同时设置 hw_started 状态
             except:
-                print('stop hotword_wake wrong')
+                logger.warning('stop hotword_wake wrong')
             else:
                 pass
             t3 = None
@@ -360,20 +361,28 @@ def inter():
             config.set(command='')
             continue
         elif cmd != '':
-            print('find something in command')
+            logger.info('Find something in command')
             text = config.get("command")
             text_enable = True
             hwcallback()
             config.set(command='')
-            print('is', text)
+            logger.info(f'The command is {text}')
             continue
 
         time.sleep(0.5)
 
-def exwake():
+def exwake_button():
     while(1):
-        GPIO.wait_for_edge(4, GPIO.RISING) 
+        GPIO.wait_for_edge(4, GPIO.RISING)
         hwcallback()
+        logger.info('Wake by physical button')
+        time.sleep(5)
+
+def exwake_dev():
+    while(1):
+        GPIO.wait_for_edge(18, GPIO.RISING)
+        hwcallback()
+        logger.info('Wake by Peripherals')
         time.sleep(5)
 
 def startchat():
@@ -393,9 +402,14 @@ def startchat():
     if gpio_wake_enable:
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(4,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
-        t4= Thread(target=exwake)
+        GPIO.setup(18,GPIO.IN,pull_up_down=GPIO.PUD_DOWN)
+        t4= Thread(target=exwake_button)
         t4.setDaemon(True)
         t4.start()
+        t5= Thread(target=exwake_dev)
+        t5.setDaemon(True)
+        t5.start()
+
     play('Sound/ding.wav')
     play('Sound/welcome.wav')
     admin()
