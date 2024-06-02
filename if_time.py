@@ -2,15 +2,16 @@ import time
 import tts
 from config import config
 from play import play
+from loguru import logger
 flag=0
 def timedetect(text):
     global flag
     if text in ['时间。','几点了。','现在几点了？','当前时间。','现在的时间。']:
-        print('time')
+        logger.info('dectect keyword time')
         flag=1
         return True
     if text in ['日期。','今天是几号？','今天的日期。','今天几号？']:
-        print('date')
+        logger.info('dectect keyword date')
         flag=2
         return True
     return False

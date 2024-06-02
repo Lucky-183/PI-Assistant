@@ -4,6 +4,7 @@ import paho.mqtt.client as mqtt
 from config import config
 from Scene import status_manager
 from threading import Event
+from loguru import logger
 MQTT_BROKER = '127.0.0.1'
 MQTT_PORT = 1883
 USERNAME = 'pi'
@@ -39,17 +40,17 @@ class MQTTClient:
             # 启动状态监测线程
             threading.Thread(target=self.monitor_dev_status, daemon=True).start()
         except Exception as e:
-            print(f"Could not connect to MQTT server: {e}")
+            logger.error(f"Could not connect to MQTT server: {e}")
 
     def on_connect(self, client, userdata, flags, rc):
-        print("MQTT Client：Connected with result code "+str(rc))
+        logger.info("MQTT Client：Connected with result code "+str(rc))
         for dev in devices.values():
             for topic in dev['sub_topic']:
                 client.subscribe(topic)
 
     def on_message(self, client, userdata, msg):
 
-        print(f"Received message: {msg.payload.decode()} on topic {msg.topic}")
+        logger.info(f"Received message: {msg.payload.decode()} on topic {msg.topic}")
         #通过msg获取设备名称和消息
         for dev, topics in devices.items():
             if msg.topic in topics['sub_topic']:
@@ -61,16 +62,16 @@ class MQTTClient:
                         if sync_value == "True" or sync_value == "False":
                             sync_value = sync_value == "True"
                         config.set(**{dev: sync_value})
-                        print(f"synced status of {dev} to {msg.payload.decode().split(':')[1]}")
+                        logger.info(f"synced status of {dev} to {msg.payload.decode().split(':')[1]}")
                     else:
                         self.dev_ack_received[dev].set()
-                        print(f"Ack received from {dev}.")
+                        logger.info(f"Ack received from {dev}.")
                 #否则是输入设备
                 else:
                     sensor_value = msg.payload.decode()
                     status_manager.set_status(**{dev:sensor_value}) #输入设备的状态设定
                     client.publish(topics['pub_topic'], "ACK:"+str(sensor_value))
-                    print(f"Published ACK:{sensor_value} to {topics['pub_topic']}")
+                    logger.info(f"Published ACK:{sensor_value} to {topics['pub_topic']}")
                 break
     
     def monitor_dev_status(self):
@@ -81,13 +82,13 @@ class MQTTClient:
                     if current_status != self.dev_status[dev]:
                         # 发布新状态
                         self.client.publish(topics['pub_topic'], str(current_status), retain=True)
-                        print(f"Published {current_status} to {topics['pub_topic']}")
+                        logger.info(f"Published {current_status} to {topics['pub_topic']}")
                         # 等待设备响应或超时（假设5秒超时）
                         if not self.dev_ack_received[dev].wait(5):
-                            print(f"No ack received from {dev}, resetting status.")
+                            logger.warning(f"No ack received from {dev}, resetting status.")
                             # 如果没有收到ack，复位设备状态
                             config.set(**{dev: self.dev_status[dev]})  # config有一个set方法来更新设备状态
-                            print(f"Reset status of {dev} to {self.dev_status[dev]}")
+                            logger.warning(f"Reset status of {dev} to {self.dev_status[dev]}")
                         else:
                             # 如果收到ack，更新最后的设备状态，并清除事件标志以便下一次使用
                             self.dev_status[dev] = current_status

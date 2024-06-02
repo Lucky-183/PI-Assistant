@@ -1,5 +1,6 @@
 import json
 from datetime import datetime
+from loguru import logger
 
 # 控制变量,不可为None
 parmas = {
@@ -78,7 +79,7 @@ class ConfigManager:
         if changed_params:
             self.write_to_file(changed_params)
             # 打印所有改变的参数
-            print(changed_params)
+            logger.info(f'Changed_params:{changed_params}')
 
     def get(self, key):
         """获取参数的值"""

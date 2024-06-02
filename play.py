@@ -3,7 +3,7 @@ import numpy as np
 import wave
 from config import config
 import os
-
+from loguru import logger
 flag=0
 def play(filename, volume=config.get("general_volume"), samplerate=16000):
     global flag
@@ -31,5 +31,5 @@ def play(filename, volume=config.get("general_volume"), samplerate=16000):
         sd.play(samples, samplerate=samplerate)
         sd.wait()
     except Exception as e:
-        print(f"Error occurred while playing {filename}: {e}")
+        logger.warning(f"Error occurred while playing {filename}: {e}")
     flag=0

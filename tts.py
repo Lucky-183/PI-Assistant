@@ -3,6 +3,7 @@ import requests
 import time
 from play import play
 from const_config import azure_key
+from loguru import logger
 url='https://eastasia.tts.speech.microsoft.com/cognitiveservices/v1'
 header={
 'X-Microsoft-OutputFormat': 'audio-24khz-48kbitrate-mono-mp3',
@@ -48,7 +49,7 @@ def ssml_save(text,filename):
                 f.write(content.content)
             return
         except Exception as e:
-            print(e)
+            logger.warning(e)
             time.sleep(5)
         play('Sound/ding.wav')
 

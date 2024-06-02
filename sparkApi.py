@@ -15,6 +15,7 @@ import pickle
 
 import websocket  # 使用websocket_client
 from const_config import sparkapi_appid,sparkapi_secret,sparkapi_key
+from loguru import logger
 answer = ""
 answer_temp = ""
 appid = sparkapi_appid     #填写控制台中获取的 APPID 信息
@@ -68,7 +69,7 @@ class Ws_Param(object):
 
 # 收到websocket错误的处理
 def on_error(ws, error):
-    print("### error:", error)
+    logger.error(f"### error:{error}")
 
 
 # 收到websocket关闭的处理
@@ -101,7 +102,7 @@ def on_message(ws, message):
     data = json.loads(message)
     code = data['header']['code']
     if code != 0:
-        print(f'请求错误: {code}, {data}')
+        logger.warning(f'请求错误: {code}, {data}')
         ws.close()
     else:
         choices = data["payload"]["choices"]
@@ -141,7 +142,7 @@ def gen_params(appid, domain,question):
 
 
 def main(appid, api_key, api_secret, Spark_url,domain, question):
-    # print("星火:")
+    
     global answer_temp
     wsParam = Ws_Param(appid, api_key, api_secret, Spark_url)
     websocket.enableTrace(False)

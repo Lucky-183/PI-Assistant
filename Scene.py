@@ -1,6 +1,7 @@
 import threading
 from datetime import datetime
 from Scene_conf import init_state,init_condition,deal_condition
+from loguru import logger
 
 class StatusManager:
     def __init__(self, callback,states):
@@ -102,7 +103,7 @@ def on_status_change(states, changed_states=None):
             current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             f.write(f"{current_time} - Scene changed to: {scene}\n")
 
-        print(f"Current scene: {scene}")
+        logger.info(f"Current scene: {scene}")
     else:
         pass
 

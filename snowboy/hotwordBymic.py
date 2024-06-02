@@ -2,7 +2,7 @@ import snowboydecoder
 import sys
 import signal
 import os
-
+from loguru import logger
 interrupted = False
 
 
@@ -28,7 +28,7 @@ model = '/home/pi/xiaoxiao/snowboy/assistxiaoxiao.pmdl'
 signal.signal(signal.SIGINT, signal_handler)
 
 detector = snowboydecoder.HotwordDetector(model, sensitivity=0.4,audio_gain=3)
-print('Listening... Press Ctrl+C to exit')
+logger.info('Snowboy service is loaded')
 def start(callback):
     
     detector.start(detected_callback=callback,

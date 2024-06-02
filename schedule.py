@@ -6,6 +6,7 @@ from threading import Thread
 import time
 import cn2an
 from play import play
+from loguru import logger
 flag = False
 flag2 = False
 nextime=None
@@ -19,7 +20,7 @@ def if_schedule(text):
         if '的闹钟' in text and '一个' in text:
             if '提醒我' in text:
                 content = text.split('提醒我')[1]
-                print(content)
+                logger.info(content)
             text = text[text.find('一个') + 2:text.find('的闹钟')]
             day = time.strftime('%d', time.localtime())
             hour_now = time.strftime('%H', time.localtime())
@@ -74,8 +75,8 @@ def if_schedule(text):
                 day = str(int(day) + 1)
             Time = time.strftime('%Y-%m-', time.localtime()) + f'{day} {hour}:{minute}:00'
             # date_time_str = cn2an.transform(date_time_str,'cn2an')
-            print(Time)
-            print(f'已为您设定好{day}日{hour}:{minute}的闹钟,{("事项为"+content) if content != "" else ""}')
+            logger.info(Time)
+            logger.info(f'已为您设定好{day}日{hour}:{minute}的闹钟,{("事项为"+content) if content != "" else ""}')
             make(Time,content)
             tts.ssml_save(f'已为您设定好{day}日{hour}点{minute}分的闹钟,{("事项为"+content) if content != "" else ""}','Sound/schedulenotify.raw')
             play('Sound/ding.wav')
@@ -91,7 +92,7 @@ def if_schedule(text):
                 strr = text.split(i)
                 content = strr[1]
                 strr = strr[0]
-                print(content)
+                logger.info(content)
                 if '小时' in strr:
                     hour = int(strr[:strr.find('小时')])
                     strr = strr[strr.find('小时') + 2:]
@@ -108,8 +109,8 @@ def if_schedule(text):
                 t = hour * 60 * 60 + minute * 60 + sec
                 Time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(time.time()) + t))
 
-                print(Time)
-                print(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你,{("事项为"+content) if content != "" else ""}')
+                logger.info(Time)
+                logger.info(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你,{("事项为"+content) if content != "" else ""}')
                 make(Time, content)
                 tts.ssml_save(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你,{("事项为"+content) if content != "" else ""}', 'Sound/schedulenotify.raw')
                 play('Sound/ding.wav')
@@ -154,8 +155,8 @@ def if_schedule(text):
                     hour = str(int(timearray[0]))
                 Time = time.strftime('%Y-%m-%d', time.localtime()) + f' {hour}:{minute}:00'
 
-                print(Time)
-                print(f'将在{hour}点{minute}分时提醒你,{("事项为" + content) if content != "" else ""}')
+                logger.info(Time)
+                logger.info(f'将在{hour}点{minute}分时提醒你,{("事项为" + content) if content != "" else ""}')
                 make(Time, content)
                 tts.ssml_save(f'将在{hour}点{minute}分时提醒你,{("事项为" + content) if content != "" else ""}',
                               'Sound/schedulenotify.raw')
@@ -188,8 +189,8 @@ def if_schedule(text):
                 t = hour * 60 * 60 + minute * 60 + sec
                 Time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(int(time.time()) + t))
 
-                print(Time)
-                print(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你')
+                logger.info(Time)
+                logger.info(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你')
                 make(Time)
                 tts.ssml_save(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你',
                               'Sound/schedulenotify.raw')
@@ -197,7 +198,7 @@ def if_schedule(text):
                 play('Sound/schedulenotify.raw')
                 return True
     except Exception as e:
-        print(e)
+        logger.warning(e)
         play('Sound/failclock.raw')
 
     return False
@@ -217,7 +218,7 @@ def sql_add(time,content):
         db.commit()
          # 执行sql语句
     except Exception as e:
-         print(e)
+         logger.warning(e)
     # 关闭数据库连接
     db.close()
 
@@ -240,7 +241,7 @@ def sql_del(cls,thing):
         db.commit()
          # 执行sql语句
     except Exception as e:
-         print(e)
+         logger.warning(e)
     db.close()
 
 def sql_getlist(index):
@@ -259,7 +260,7 @@ def sql_getlist(index):
          list=cursor.fetchall()
          # 执行sql语句
     except Exception as e:
-          print(e)
+          logger.warning(e)
     db.close()
     return list
 
@@ -275,7 +276,7 @@ def make(Time, content=''):
         alter()
         return [Time,content]
     except Exception as e:
-        print(e)
+        logger.warning(e)
         play('Sound/failclock_format.raw')
 # make('2023-8-12 12:34:12','')
 
@@ -283,7 +284,7 @@ def cancel(cls,thing):
     sql_del(cls,thing)
     alter()
 
-    print(thing,'canceling')
+    logger.info(f'{thing} canceling')
 
 
 def alter():
@@ -292,7 +293,7 @@ def alter():
         for i in sql_getlist('time'):
             if i[0] > int(time.time()):
                 nextime=i[0]
-                print('nexttime',nextime)
+                logger.info(f'nexttime:{nextime}')
                 break
     else:
         nextime=None
@@ -302,7 +303,7 @@ def time_up():
     nextime=None
     alter()
 
-    print(f'您设定的时间到了,{"" if sql_getlist("*")[0][2] == "" else ("晓晓提醒您:"+sql_getlist("*")[0][2])}')
+    logger.info(f'您设定的时间到了,{"" if sql_getlist("*")[0][2] == "" else ("晓晓提醒您:"+sql_getlist("*")[0][2])}')
     tts.ssml_save(f'您设定的时间到了,{"" if sql_getlist("*")[0][2] == "" else ("晓晓提醒您:"+sql_getlist("*")[0][2])}','Sound/schedulenotify.raw')
 
     play('Sound/ding.wav')
@@ -319,7 +320,7 @@ def timer():
     for i in sql_getlist('time'):
         if i[0] < int(time.time()):
             cancel('time', i[0])
-            print(i[0],'has been cancel')
+            logger.info(f'{i[0]},has been cancel')
 
     global nextime
     while(1):

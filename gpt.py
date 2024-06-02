@@ -7,6 +7,7 @@ from random import random
 import os
 import time
 from const_config import proxy,openapikey
+from loguru import logger
 
 usage=0
 messages = []
@@ -114,7 +115,7 @@ def deal():
     response=send(messages)
 
     if response.get("function_call"):
-        print(response["function_call"])
+        logger.debug(response["function_call"])
         # Step 3: call the function
         # Note: the JSON response may not always be valid; be sure to handle errors
         available_functions = {
