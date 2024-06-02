@@ -5,14 +5,22 @@
 
 ## 🗺️ 更新日志
 
+### [2024/6/2]
+
+- 规范运行日志（引入loguru库）
+- 新增外设端口 BCM号18（用于外接语音唤醒模块，以获得更好的唤醒体验）
+- 优化中断退出机制
+- 更新README.md
+
+<details>
+
+<summary>更多</summary>
+
 ### [2024/5/13]
 
 - 增加HomeAssistant设备控制，利用HA的API实现了对其下设备的控制，并提供了一个基本示例
 - 修改了文档中对场景、外设及自动化部分的语言描述，更清晰易懂
 
-<details>
-
-<summary>更多</summary>
 
 ### [2024/3/12]
 
@@ -50,7 +58,7 @@
 
 ## 💡 功能列表
 
-- 支持多种唤醒方式：语音唤醒，局域网消息唤醒，外设唤醒，远程唤醒
+- 支持多种唤醒方式：语音唤醒，局域网消息唤醒，外设模块唤醒，远程唤醒
 - 语音端点检测：自动检测语音截止点
 - 语音识别：支持在线与离线双模式
 - 文字转语音：舒适的人声
@@ -74,7 +82,7 @@
 ### Python模块安装
 
 ```bash
-pip install requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt
+pip install loguru requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt 
 ```
 
 具体库版本可参考```requirements.txt```文件
@@ -202,11 +210,15 @@ python server.py #主程序
 
 ## ✏️ 待实现功能
 
+- GPT回答流式生成，并考虑新增Groq的AI接口
+
+- 音频流式播放，重做非阻塞音频部分
+
+- ‘场景’控制方案重写（描述）为‘自动化’控制方案
+
 - 低功耗BLE外设硬件开发
 
-- 树莓派助手与手机远程协同（类似钢铁侠中的贾维斯）
-
-- 实现场景配置热重载，场景Web调参
+- 未联网下自动切换为离线语音识别
 
 <br>
 
