@@ -9,7 +9,7 @@
 
 - 规范运行日志（引入loguru库）
 - 新增外设端口 BCM号18（用于外接语音唤醒模块，以获得更好的唤醒体验）
-- 优化中断退出机制
+- 添加Ctrl+C中断退出
 - 更新README.md
 
 <details>
@@ -207,6 +207,10 @@ python server.py #主程序
 可使用网页端在程序运行时调参,地址为 http://ip:5000 
 
 <br>
+
+### 文件层次结构
+
+![p1](https://github.com/Lucky-183/PI-Assistant/blob/master/arch.PNG)
 
 ## ✏️ 待实现功能
 
