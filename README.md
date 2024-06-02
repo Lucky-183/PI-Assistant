@@ -206,11 +206,13 @@ python server.py #主程序
 
 可使用网页端在程序运行时调参,地址为 http://ip:5000 
 
-<br>
 
 ### 文件层次结构
 
 ![p1](https://github.com/Lucky-183/PI-Assistant/blob/master/arch.PNG)
+
+<br>
+
 
 ## ✏️ 待实现功能
 
