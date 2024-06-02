@@ -1,17 +1,24 @@
 #coding=utf-8
+import sys
+import os
+import signal
 import time
-from flask import request
-from flask import Flask
-from flask import jsonify
-from flask import render_template
+from loguru import logger
+logger.remove()
+logger.add(sys.stdout, colorize=True,  format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level}</level> | {message}", level="INFO")
+logger.add('Log/PI-Assistant.log', colorize=False,  format="<green>{time:YYYY-MM-DD HH:mm:ss}</green> | <level>{level}</level> | {file}:{line} - <level>{message}</level>", level="DEBUG")
+
+from flask import request,Flask,jsonify,render_template
 import arcade
 from threading import Thread
 import chat
 from config import config
 from const_config import music_enable,schedule_enable,udp_enable,hass_demo_enable
-import logging
-log = logging.getLogger('werkzeug')
-log.setLevel(logging.ERROR)  # 只记录错误消息
+import if_time
+import tts
+from play import play
+import Scene
+
 if music_enable:
     import if_music
 if schedule_enable:
@@ -19,20 +26,13 @@ if schedule_enable:
 if udp_enable:
     import udpserver
 
-import if_time
-import tts
-from play import play
-import Scene
+import logging
+logging.getLogger('werkzeug').setLevel(logging.ERROR)
 
 notifyplayer=None
 notifysound=None
 
-global status
-status='1'
-words=''
-app = Flask(__name__)
-
-from flask import jsonify
+app = Flask('PI-Assistant')
 
 @app.route('/')
 def index():
@@ -97,17 +97,13 @@ def remove_quick_command():
 @app.route('/cookie')
 def chang():
     submit = request.args.get('cookie')
-    print(submit)
+    logger.info(f"收到cookie：{submit}")
     with open('cookie.txt','w') as f:
         f.write(submit)
         f.close()
     return 'ok'
 
-@app.route('/status')
-def statu():
-    global status
-    return status
-
+words=''
 @app.route('/words')
 def speakk():
 
@@ -147,6 +143,10 @@ def what():
     config.set(command=words)
     return 'ok'
 
+def signal_handler(sig, frame):
+    logger.info('Shutting down...\n')
+    os._exit(0)
+
 def admin():
     global notifyplayer,notifysound
     last_time=None
@@ -157,11 +157,11 @@ def admin():
                 config.set(notify_enable=False)
                 try:
                     notifysound.stop(notifyplayer)
-                    print('stop sound in server watch')
+                    logger.info('stop sound in server admin')
                 except:
-                    print('wrong stop in admin')
+                    logger.warning('cannot stop sound in server admin')
                 times=0
-                print('notifysound stoped by server watch function')
+                logger.info('notifysound stoped by server watch function')
             else:
                 times=times+1
                 if times>=8:
@@ -169,15 +169,15 @@ def admin():
                     config.set(notify_enable=False)
                     try:
                         notifysound.stop(notifyplayer)
-                        print('stop sound in admin by time')
+                        logger.warning('stop sound in admin by time')
                     except:
-                        print('wrong stop in admin')
-                    print('notifysound stoped by server watch function(time)')
+                        logger.warning('cannot stop sound in admin by time')
+                    logger.info('notifysound stoped by server watch function(time)')
                     times=0
 
         if time.localtime()[4]==0 and config.get("timenotify") is True:
             if last_time!=time.localtime()[3]:
-                print('notify time')
+                logger.info('notify time')
                 words=f'整点报时,已经{time.localtime()[3] if time.localtime()[3]<13 else time.localtime()[3]-12}点啦'
                 try:
                     tts.ssml_wav(words,'Sound/notify.wav')
@@ -187,7 +187,7 @@ def admin():
                         notifysound = arcade.Sound('Sound/notify.wav')
                         notifyplayer = notifysound.play()
                 except Exception as e:
-                    print(e)
+                    logger.warning(e)
                     if config.get("chat_enable") is False and config.get("notify_enable") is False:
                         play('Sound/ding.wav')
                         play('Sound/notifytime.wav')
@@ -196,19 +196,23 @@ def admin():
         time.sleep(2)
 
 if __name__ == '__main__':
-    
+    signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGTERM, signal_handler)
     t=Thread(target=chat.startchat)
     t.start()
+    logger.info('Chat service started successfully')
     t2=Thread(target=admin)
     t2.start()
 
     if music_enable:
         t3=Thread(target=if_music.watch)
         t3.start()
+        logger.info('Music service started successfully')
     
     if udp_enable:
         t4=Thread(target=udpserver.udp_server)
         t4.start()
+        logger.info('Udp service started successfully')
 
     t5=Thread(target=if_time.admin)
     t5.start()
@@ -216,10 +220,15 @@ if __name__ == '__main__':
     if schedule_enable:
         t6=Thread(target=schedule.timer)
         t6.start()
+        logger.info('Schedule service started successfully')
     
     if hass_demo_enable:
         import hass_light_demo
         t7=Thread(target=hass_light_demo.handle)
         t7.start()
+        logger.info('hassApi service started successfully')
+
+    logger.info('Startup completed , PI-Assistant is running')
 
     app.run(host='0.0.0.0')
+
