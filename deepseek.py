@@ -113,7 +113,7 @@ def read():
         logger.info("对话记录已加载。")
     else:
         logger.info("未找到保存的对话记录，初始化新对话。")
-        # init_system()
+        init_system()
 
 
 if __name__ == "__main__":
