@@ -1,5 +1,5 @@
 import sys
-from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable,use_openai,dev_enable,wlan_enable
+from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable,use_openai,dev_enable,wlan_enable,use_spark,use_deepseek
 
 if snowboy_enable:
     from const_config import snowboypath
@@ -31,9 +31,11 @@ import speechpoint
 
 from tts import ssml_wav
 
-if use_openai:
-    import gpt
-else:
+if use_deepseek:
+    import deepseek
+elif use_openai:
+    import openai
+elif use_spark:
     import sparkApi
 
 import os
@@ -195,9 +197,11 @@ def work():
 
         if if_exit.ifexit(text):
             if use_openai:
-                gpt.save()
-            else:
+                openai.save()
+            elif use_spark:
                 sparkApi.save()
+            elif use_deepseek:
+                deepseek.save()
             flag = 0
             next = False
             allow_running = True
@@ -254,16 +258,18 @@ def work():
         
     if allow_running:
         if use_openai:
-            gpt.ask(text)
+            openai.ask(text)
         try:
             if use_openai:
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
                 #异步适配ddg
-                reply = gpt.deal()
+                reply = openai.deal()
                 loop.close()
-            else:
-                reply=sparkApi.ask(text)
+            elif use_deepseek:
+                reply=deepseek.ask(text)
+            elif use_spark:
+                reply = sparkApi.ask(text)
 
         except Exception as e:
 
@@ -392,8 +398,10 @@ def startchat():
     t2.start()
     #os.system('/home/pi/linkbt.sh')
     if use_openai:
-        gpt.read()
-    else:
+        openai.read()
+    elif use_deepseek:
+        deepseek.read()
+    elif use_spark:
         sparkApi.read()
     if snowboy_enable is True and config.get("wakebyhw") is True:
         t3 = Thread(target=hotwordBymic.start, args=(hwcallback,))

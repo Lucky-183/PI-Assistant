@@ -1,12 +1,17 @@
 # 用到的端口 3306 mysql 3300 音乐接口 5000 网络交互 6666 udp服务
 
-use_openai=True #True则使用openai,False则使用SparkApi,填写对应的Key即可
+use_deepseek=True
+sfapikey=''
+
+use_openai=False #True则使用openai
 openapikey='' #gpt-key
 
-#use_openai=False 
+use_spark=False
 sparkapi_appid=''
 sparkapi_secret=''
 sparkapi_key=''
+
+#####以上模型提供方三选一,True选择对应的模型,需要填写key######
 
 use_online_recognize=True #是否采用线上语音识别（效果好，针对优化）
 azure_key=''   #Azrue tts recog
