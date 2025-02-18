@@ -7,7 +7,7 @@
 
 ### [2025/2/18]
 
-- 增加DeepSeek模型选项(由SiliconFlow提供Api接口)
+- 增加DeepSeek模型选项(由[SiliconFlow](https://cloud.siliconflow.cn/models)提供Api接口)
 
 
 ### [2024/6/2]
@@ -221,17 +221,17 @@ python server.py #主程序
 
 ## ✏️ 待实现功能
 
-- 添加DeepSeek联网搜索function_call支持
-
 - 模型回答流式生成，音频流式播放，重做非阻塞音频部分
+
+- 添加DeepSeek联网搜索function_call支持
 
 - 依靠大模型调度实现智能家具控制
 
 - ‘场景’控制方案重写（描述）为‘自动化’控制方案
 
-~~ 低功耗BLE外设硬件开发 ~~
+~~低功耗BLE外设硬件开发~~
 
-~~ 未联网下自动切换为离线语音识别 ~~
+~~未联网下自动切换为离线语音识别~~
 
 <br>
 
