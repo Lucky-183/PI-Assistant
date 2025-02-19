@@ -218,7 +218,7 @@ python server.py #主程序
 
 ### 文件层次结构
 
-![p1](https://github.com/Lucky-183/PI-Assistant/blob/master/arch.jpg)
+![p1](https://github.com/Lucky-183/PI-Assistant/blob/master/arch.png)
 
 <br>
 
