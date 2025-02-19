@@ -32,7 +32,7 @@ import speechpoint
 from tts import ssml_wav
 
 if use_deepseek:
-    import deepseek
+    import deepseek_stream_with_tts
 elif use_openai:
     import openai
 elif use_spark:
@@ -75,11 +75,16 @@ times=0
 
 def hwcallback():
     global running, actived, allow_running
-    if running == True and allow_running == False:
-        actived = 3
+    # 根据程序运行状态设置不同的激活状态
+    if running and not allow_running:
+        actived = 3  # 多次唤醒造成的错误标志位
         return False
-    if running == True:
+
+    if running:
         actived = 2  # 运行时激活
+        # 运行时激活停止播放声音(流式)
+        if use_deepseek:
+            deepseek_stream_with_tts.tts_manager.stop_tts()
         logger.warning('Conversation was interrupted')
     else:
         actived = 1  # 休眠激活
@@ -87,27 +92,51 @@ def hwcallback():
 
 def admin():
     global actived, allow_running, actived, next, running, flag, chatsound, chatplayer ,times
-    while (flag == 1):
-        if actived == 3 or (chatsound and chatplayer and chatsound.is_playing(chatplayer) is False and running is False) :
-            config.set(chat_enable=False)
-        if actived == 3 or (running is False and config.get("notify_enable") is False and (actived == 1 or (next is True and chatsound and chatplayer and chatsound.is_complete(chatplayer)))):
-            if actived == 3:
-                logger.error('Error in chat, The program will exit soon')
-                play('Sound/exit.wav')
-                os._exit(0)
+    
+    while flag == 1 :
+
+        # 如果是actived为3,程序无法处理,直接退出
+        if actived == 3: 
+            logger.error('Error in chat, The program will exit soon')
+            play('Sound/exit.wav')
+            os._exit(0)
+
+        # 判断是否有声音正在播放(非流式)
+        is_sound_playing = chatsound and chatplayer and chatsound.is_playing(chatplayer)
+        # 判断声音是否播放完成(非流式)
+        is_sound_playing_complete = chatsound and chatplayer and chatsound.is_complete(chatplayer)
+
+        #释放chat占用的语音
+        if not is_sound_playing and not running :
+            config.set(chat_enable=False) 
+        
+        # 处理接续对话
+        if (not running and not config.get("notify_enable") and 
+            (actived == 1 or (next is True and is_sound_playing_complete) or 
+             (next is True and use_deepseek and deepseek_stream_with_tts.tts_manager.tts_task 
+              and deepseek_stream_with_tts.tts_manager.tts_task.get()))):  #播放完成返回信息(流式)
+            
+            if use_deepseek: #为deepseek模型添加延时
+                time.sleep(2)
+            
             t1 = Thread(target=work)
             t1.setDaemon(True)
             config.set(chat_enable=True)
-
             t1.start()
             logger.info('start new conversation')
-        if actived == 2:
+
+        # 程序运行状态修改
+        if actived == 2:        
             allow_running = False
             actived = 1
+
+        # 提供函数终止的功能
         if actived == -1:
             # interruped = True
             flag = 0
-        if chatsound and chatplayer and chatsound.is_playing(chatplayer):
+
+        # 处理正在播放的声音,主要为异常处理 (非流式)
+        if is_sound_playing:
             if chatsound.is_complete(chatplayer):
                 try:
                     chatsound.stop(chatplayer)
@@ -134,6 +163,7 @@ def work():
     running = True
     next = True if next_enable is True else False
 
+    # 停止正在播放的声音(非流式)
     if (chatplayer and chatsound and chatsound.is_playing(chatplayer)):
         try:
             logger.info('stoping chatsound')
@@ -141,7 +171,7 @@ def work():
             times=0
         except:
             logger.warning('stop chatsound wrong')
-
+    
     actived = 0
     if allow_running and ((text_enable or manual_enable) is False):
         try:
@@ -201,7 +231,7 @@ def work():
             elif use_spark:
                 sparkApi.save()
             elif use_deepseek:
-                deepseek.save()
+                deepseek_stream_with_tts.save()
             flag = 0
             next = False
             allow_running = True
@@ -267,7 +297,7 @@ def work():
                 reply = openai.deal()
                 loop.close()
             elif use_deepseek:
-                reply=deepseek.ask(text)
+                reply=deepseek_stream_with_tts.ask(text)
             elif use_spark:
                 reply = sparkApi.ask(text)
 
@@ -280,6 +310,7 @@ def work():
             running = False
             return None
         else:
+            # 保存对话记录,发送至网页端,deepseek为流式回复,在其文件中
             if use_openai:
                 logger.info(reply['content'])
                 config.set(answer=reply['content'])
@@ -297,8 +328,10 @@ def work():
             allow_running = True
             running = False
             
+        if use_deepseek and deepseek_stream_with_tts.tts_manager.tts_task:
+            deepseek_stream_with_tts.tts_manager.tts_task.get()
 
-    if allow_running:
+    if allow_running and not use_deepseek:
         try:
             if os.path.exists('Sound/answer.wav'):
                 os.remove('Sound/answer.wav')
@@ -312,16 +345,19 @@ def work():
             play('Sound/ttserror.wav')
             allow_running = False
         play('Sound/ding.wav')
-    if allow_running:
+
+    if allow_running and not use_deepseek:
         chatsound = arcade.Sound('Sound/answer.wav')
         chatplayer = chatsound.play()
         time.sleep(0.5)
+
     logger.info('A conversation end')
     allow_running = True
     running = False
     return None
 
 
+#交互功能
 def inter():
     global actived, text, text_enable, flag, t3, manual_enable, next_enable
     while (1):
@@ -400,7 +436,7 @@ def startchat():
     if use_openai:
         openai.read()
     elif use_deepseek:
-        deepseek.read()
+        deepseek_stream_with_tts.read()
     elif use_spark:
         sparkApi.read()
     if snowboy_enable is True and config.get("wakebyhw") is True:
