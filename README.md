@@ -5,10 +5,16 @@
 
 ## 🗺️ 更新日志
 
-### [2025/2/18]
+### [2025/2/19]
 
-- 增加DeepSeek模型选项(由[SiliconFlow](https://cloud.siliconflow.cn/models)提供Api接口)
+- 增加DeepSeek模型选项（由[SiliconFlow](https://cloud.siliconflow.cn/models)提供Api接口）
+- 接入硅基流动（SiliconFlow）平台，系列顶尖大模型随心切换
+- 模型回答修改为**流式输出**，TTS音频升级为**流式传输/播放**，对话感知延迟大幅降低
+- 优化程序代码逻辑，增强可读性
 
+<details>
+
+<summary>更多</summary>
 
 ### [2024/6/2]
 
@@ -17,9 +23,6 @@
 - 添加Ctrl+C中断退出
 - 更新README.md
 
-<details>
-
-<summary>更多</summary>
 
 ### [2024/5/13]
 
@@ -87,7 +90,7 @@
 ### Python模块安装
 
 ```bash
-pip install loguru requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt 
+pip install azure-cognitiveservices-speech loguru requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt 
 ```
 
 具体库版本可参考```requirements.txt```文件
@@ -96,9 +99,9 @@ pip install loguru requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2a
 
 为了使用语音识别以及文字转语音，需要注册微软Azure，获取Azure认知服务的APIkey
 
-### GPT服务/星火API
+### 硅基流动云服务/GPT服务/星火API
 
-为了生成对话文本，需要注册OpenAI/讯飞星火账号（二选一），并获取APIkey
+为了生成对话文本，需要注册硅基流动/OpenAI/讯飞星火账号（三选一），并获取APIkey
 
 ### Nodejs安装(可选)
 
@@ -214,20 +217,20 @@ python server.py #主程序
 
 ### 文件层次结构
 
-![p1](https://github.com/Lucky-183/PI-Assistant/blob/master/arch.PNG)
+![p1](https://github.com/Lucky-183/PI-Assistant/blob/master/arch.jpg)
 
 <br>
 
 
 ## ✏️ 待实现功能
 
-- 模型回答流式生成，音频流式播放，重做非阻塞音频部分
-
-- 添加DeepSeek联网搜索function_call支持
-
 - 依靠大模型调度实现智能家具控制
 
+- 添加DeepSeek联网搜索支持
+
 - ‘场景’控制方案重写（描述）为‘自动化’控制方案
+
+- OpenAi模型及TTS语音流式生成
 
 ~~低功耗BLE外设硬件开发~~
 
