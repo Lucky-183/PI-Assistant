@@ -5,7 +5,7 @@
 
 ## 🗺️ 更新日志
 
-### [2025/2/19]
+### [2025/2/20]
 
 - 增加DeepSeek模型选项（由[SiliconFlow](https://cloud.siliconflow.cn/models)提供Api接口）
 - 接入硅基流动（SiliconFlow）平台，系列顶尖大模型随心切换
@@ -172,7 +172,7 @@ password_file /etc/mosquitto/passwd
 
 ### 大模型调度控制设备(可选)
 
-修改 ``` const_config.py ``` 中的 ``` chat_or_standard ```为False，在config.py 以及 Scene_conf.py 中添加设备，程序将同时发送用户消息以及```输入设备```的状态到大语言模型，返回一段文字以及命令，文字用于反馈用户，命令用于控制```可控设备```，详见``` prompt_and_deal.py ```
+修改 ``` const_config.py ``` 中的 ``` chat_or_standard ```为 ```False ```，在 ``` config.py ``` 以及 ``` Scene_conf.py ``` 中添加设备，程序将同时发送用户消息以及```输入设备```的状态到大语言模型，返回一段文字以及命令，文字用于反馈用户，命令用于控制```可控设备```，详见``` prompt_and_deal.py ```
 
 ### 广域网MQTT配置(可选)
 
