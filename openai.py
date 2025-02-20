@@ -3,11 +3,10 @@ import search_func
 import json
 import pickle
 import summary
-from random import random
 import os
-import time
 from const_config import proxy,openapikey
 from loguru import logger
+
 
 usage=0
 messages = []
@@ -86,8 +85,9 @@ def send(message):
     return completion['choices'][0]["message"]
 
 def ask(words):
+    from prompt_and_deal import get_system_prompt
     askmsg = messages.append({"role": "user", "content": words})
-    text = {"role": "system","content": f"You are a home smart assistant named as '晓晓‘. Please fully assume the role.  You only need to answer a concise paragraph. Control the number of words in the reply, but it cannot affect the expression.When needed, you can query information online through a specific function, and return results based on the information. When the user input is empty or meaningless , You can end the conversation by replying with the four words '结束对话' .Time:[{time.strftime('%A %Y-%m-%d %H:%M:%S', time.localtime())}]. Location:Nanjing City, Jiangsu Province, China. Communicate in Chinese"}
+    text = get_system_prompt()
     askmsg = messages.append(text)
     return askmsg
 
@@ -102,8 +102,8 @@ def initsystem():
     messages = []
 
 def systemask(response):
-
-    text = {"role": "system","content": f"You are a home smart assistant named as '晓晓‘. Please fully assume the role.  You only need to answer a concise paragraph. Control the number of words in the reply, but it cannot affect the expression.When needed, you can query information online through a specific function, and return results based on the information. When the user input is empty or meaningless , You can end the conversation by replying with the four words '结束对话' .Time:[{time.strftime('%A %Y-%m-%d %H:%M:%S', time.localtime())}]. Location:Nanjing City, Jiangsu Province, China. Communicate in Chinese"}
+    from prompt_and_deal import get_system_prompt
+    text = get_system_prompt()
     askmsg= messages.append({"role": "system",
                 "content": response})
     askmsg= messages.append(text)

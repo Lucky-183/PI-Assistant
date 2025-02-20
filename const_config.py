@@ -13,10 +13,11 @@ sparkapi_key=''
 
 #####以上模型提供方三选一,True选择对应的模型,需要填写key######
 
+chat_or_standard=True #采用聊天模式还是标准模式（家庭助手），True为聊天模式（采用流式），详见 prompt_and_deal.py
 use_online_recognize=True #是否采用线上语音识别（效果好，针对优化）
 azure_key=''   #Azrue tts recog
 proxy= {'http':'http://127.0.0.1:10810',
-        'https':'http://127.0.0.1:10810'} #gpt以及duckduckgo的代理
+        'https':'http://127.0.0.1:10810'} #openai以及duckduckgo的代理
 snowboy_enable=False #是否加载snowboy模块，需提前安装好
 snowboypath="/home/pi/xiaoxiao/snowboy" #snowboy位置（如果开启snowboy）
 gpio_wake_enable=False  #按键唤醒，如果相应引脚接有外设的情况下开启

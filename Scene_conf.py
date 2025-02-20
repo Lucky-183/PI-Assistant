@@ -2,14 +2,15 @@ from config import config
 from play import play
 
 # 状态量,可为None
-init_state = {
+device_state = {
     "music_playing": False,
     "time": None,
     "user_status": "offline",
     "sensor_demo": None,
+    "HA_light_demo": None
 }
 # 场景条件（越靠前优先级越高）
-init_condition = {
+condition = {
     "demo1": {"sensor_demo": True},
     "demo2": {"sensor_demo": False},
     "Morning": {"time": (6, 9, 0, 0), "user_status": None},

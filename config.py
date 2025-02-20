@@ -19,12 +19,21 @@ parmas = {
     "Noticenotify": True,
     "timenotify": True,
     "MusicPlay": False,
-    # 外设
-    "dev_demo": False,
-    # HASS外设
-    "HA_light_demo": False,
     # ... 可以添加更多的参数
 }
+# 外设控制参数
+device_params = {
+    "dev_demo": False,
+    "HA_light_demo": False, # HASS外设
+}
+
+param_types = {
+    # "command": "string",
+    # "music_volume": "float",
+    "dev_demo": "bool",
+    "HA_light_demo": "bool"
+}
+
 # 这里列出需要追踪的参数
 tracked_params = [
     "music_volume",
@@ -33,7 +42,8 @@ tracked_params = [
     "Noticenotify",
     "timenotify",
     "MusicPlay",
-    "dev_demo"
+    "dev_demo",
+    "HA_light_demo",
 ]
 # WebUI可修改的参数
 allow_params = [
@@ -49,8 +59,9 @@ allow_params = [
 
 
 class ConfigManager:
-    def __init__(self, params, tracked_params, allow_params):
+    def __init__(self, params, device_params, tracked_params, allow_params):
         self.params = params
+        self.device_params = device_params
         self.tracked_params = tracked_params
         self.allow_params = allow_params
 
@@ -74,8 +85,13 @@ class ConfigManager:
                     changed_params[key] = value
                 # 更新参数值
                 self.params[key] = value
+            elif key in self.device_params:
+                # 追踪外设参数变更
+                if key in self.tracked_params and self.device_params[key] != value:
+                    changed_params[key] = value
+                self.device_params[key] = value
             else:
-                raise ValueError(f"Unknown status key: {key}")
+                logger.warning(f"Unknown config key: {key}")
         if changed_params:
             self.write_to_file(changed_params)
             # 打印所有改变的参数
@@ -83,8 +99,8 @@ class ConfigManager:
 
     def get(self, key):
         """获取参数的值"""
-        return self.params.get(key, None)
+        return self.params.get(key) if key in self.params else self.device_params.get(key, None)
 
 
 # 创建单例
-config = ConfigManager(parmas, tracked_params, allow_params)
+config = ConfigManager(parmas, device_params, tracked_params, allow_params)

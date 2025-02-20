@@ -1,5 +1,4 @@
 import requests
-import time
 import os
 import pickle
 import json
@@ -8,7 +7,6 @@ import threading
 from queue import Queue
 from loguru import logger
 from tts_stream import TTSManager
-from config import config
 
 # DeepSeek API 配置
 url = "https://api.siliconflow.cn/v1/chat/completions"
@@ -23,16 +21,10 @@ def init_system():
     """
     初始化系统对话，添加系统提示。
     """
+    from prompt_and_deal import get_system_prompt
     global messages
     messages = []
-    system_message = {
-        "role": "system",
-        "content": (
-            "你是一个家居智能助手，名为‘晓晓’。请充分扮演此角色，给出简洁、准确的回答。"
-            # "当用户输入为空或无意义时，请回复‘结束对话’。"
-            f" 时间:[{time.strftime('%Y-%m-%d %H:%M:%S', time.localtime())}]，地点:中国陕西省西安市。"
-        )
-    }
+    system_message = get_system_prompt()
     messages.append(system_message)
 
 

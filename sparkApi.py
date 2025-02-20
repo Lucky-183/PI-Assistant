@@ -16,6 +16,7 @@ import pickle
 import websocket  # 使用websocket_client
 from const_config import sparkapi_appid,sparkapi_secret,sparkapi_key
 from loguru import logger
+
 answer = ""
 answer_temp = ""
 appid = sparkapi_appid     #填写控制台中获取的 APPID 信息
@@ -24,6 +25,7 @@ api_key = sparkapi_key   #填写控制台中获取的 APIKey 信息
 
 domain = "generalv3.5"
 Spark_url = "ws://spark-api.xf-yun.com/v3.5/chat"  # v3.5环境的地址
+text =[]
 class Ws_Param(object):
     # 初始化
     def __init__(self, APPID, APIKey, APISecret, Spark_url):
@@ -154,8 +156,9 @@ def main(appid, api_key, api_secret, Spark_url,domain, question):
     ws.run_forever(sslopt={"cert_reqs": ssl.CERT_NONE})
     return answer_temp
 
-prom={"role":"system","content":"你是一个家庭智能助手，名字叫“晓晓”。 请充分代入这个角色。 你只需回答一个简洁的段落即可。当用户输入空或无意义时，可以通过回复“结束对话”四个字来结束对话。 地点：中国江苏省南京市。"}
-text =[prom]
+def get_prompt():
+    from prompt_and_deal import get_system_prompt
+    return get_system_prompt()
 
 # length = 0
 
@@ -196,6 +199,9 @@ def read():
     if(os.path.exists('Smessage.data')):
         with open("Smessage.data", 'rb+') as f:
             text=pickle.load(f)
+    else:
+        from prompt_and_deal import get_system_prompt
+        text.append(get_system_prompt())
 
 if __name__ == '__main__':
     while 1:

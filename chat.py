@@ -1,5 +1,7 @@
 import sys
-from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,music_enable,schedule_enable,use_openai,dev_enable,wlan_enable,use_spark,use_deepseek
+from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,\
+    music_enable,schedule_enable,use_openai,dev_enable,wlan_enable,\
+    use_spark,use_deepseek,chat_or_standard
 
 if snowboy_enable:
     from const_config import snowboypath
@@ -31,10 +33,16 @@ import speechpoint
 
 from tts import ssml_wav
 
+import prompt_and_deal
+
 if use_deepseek:
-    import deepseek_stream_with_tts
+    if chat_or_standard:
+        import deepseek_stream_with_tts
+    else:
+        import deepseek
 elif use_openai:
     import openai
+    import asyncio
 elif use_spark:
     import sparkApi
 
@@ -43,8 +51,6 @@ import os
 import arcade
 
 from threading import Thread
-
-import asyncio
 
 import time
 
@@ -83,7 +89,7 @@ def hwcallback():
     if running:
         actived = 2  # 运行时激活
         # 运行时激活停止播放声音(流式)
-        if use_deepseek:
+        if use_deepseek and chat_or_standard is True:
             deepseek_stream_with_tts.tts_manager.stop_tts()
         logger.warning('Conversation was interrupted')
     else:
@@ -113,10 +119,10 @@ def admin():
         # 处理接续对话
         if (not running and not config.get("notify_enable") and 
             (actived == 1 or (next is True and is_sound_playing_complete) or 
-             (next is True and use_deepseek and deepseek_stream_with_tts.tts_manager.tts_task 
+             (next is True and use_deepseek and chat_or_standard and deepseek_stream_with_tts.tts_manager.tts_task
               and deepseek_stream_with_tts.tts_manager.tts_task.get()))):  #播放完成返回信息(流式)
             
-            if use_deepseek: #为deepseek模型添加延时
+            if use_deepseek and chat_or_standard is True: #为deepseek模型添加延时
                 time.sleep(2)
             
             t1 = Thread(target=work)
@@ -231,7 +237,10 @@ def work():
             elif use_spark:
                 sparkApi.save()
             elif use_deepseek:
-                deepseek_stream_with_tts.save()
+                if chat_or_standard:
+                    deepseek_stream_with_tts.save()
+                else:
+                    deepseek.save()
             flag = 0
             next = False
             allow_running = True
@@ -287,19 +296,9 @@ def work():
             return None
         
     if allow_running:
-        if use_openai:
-            openai.ask(text)
+
         try:
-            if use_openai:
-                loop = asyncio.new_event_loop()
-                asyncio.set_event_loop(loop)
-                #异步适配ddg
-                reply = openai.deal()
-                loop.close()
-            elif use_deepseek:
-                reply=deepseek_stream_with_tts.ask(text)
-            elif use_spark:
-                reply = sparkApi.ask(text)
+            reply=prompt_and_deal.send(text)
 
         except Exception as e:
 
@@ -328,10 +327,10 @@ def work():
             allow_running = True
             running = False
             
-        if use_deepseek and deepseek_stream_with_tts.tts_manager.tts_task:
+        if use_deepseek and chat_or_standard and deepseek_stream_with_tts.tts_manager.tts_task:
             deepseek_stream_with_tts.tts_manager.tts_task.get()
 
-    if allow_running and not use_deepseek:
+    if allow_running and not (use_deepseek and chat_or_standard):
         try:
             if os.path.exists('Sound/answer.wav'):
                 os.remove('Sound/answer.wav')
@@ -346,7 +345,7 @@ def work():
             allow_running = False
         play('Sound/ding.wav')
 
-    if allow_running and not use_deepseek:
+    if allow_running and not (use_deepseek and chat_or_standard):
         chatsound = arcade.Sound('Sound/answer.wav')
         chatplayer = chatsound.play()
         time.sleep(0.5)
@@ -436,7 +435,10 @@ def startchat():
     if use_openai:
         openai.read()
     elif use_deepseek:
-        deepseek_stream_with_tts.read()
+        if chat_or_standard:
+            deepseek_stream_with_tts.read()
+        else:
+            deepseek.read()
     elif use_spark:
         sparkApi.read()
     if snowboy_enable is True and config.get("wakebyhw") is True:

@@ -1,6 +1,6 @@
 import threading
 from datetime import datetime
-from Scene_conf import init_state,init_condition,deal_condition
+from Scene_conf import device_state,condition,deal_condition
 from loguru import logger
 
 class StatusManager:
@@ -27,13 +27,21 @@ class StatusManager:
                     changed_states[key] = value
                 self.states[key] = value
             else:
-                raise ValueError(f"Unknown status key: {key}")
+                logger.warning(f"Unknown status key: {key}")
         # 如果有状态变化且存在回调函数，则调用回调函数并传入发生变化的状态
         if changed_states and self.callback:
             self.callback(self.states, changed_states)
 
     def get_status(self, key):
         return self.states.get(key, None)
+
+    def list_devices(self):
+        """返回所有设备的名称列表"""
+        return list(self.states.keys())
+
+    def get_devices_statuses(self):
+        """返回所有设备的状态信息"""
+        return self.states.copy()
 
     def __str__(self):
         return str(self.states)
@@ -108,7 +116,7 @@ def on_status_change(states, changed_states=None):
         pass
 
 
-scene_manager=SceneManager(init_condition)
-status_manager = StatusManager(callback=on_status_change,states=init_state)
+scene_manager=SceneManager(condition)
+status_manager = StatusManager(callback=on_status_change,states=device_state)
 
 

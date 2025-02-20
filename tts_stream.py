@@ -99,7 +99,7 @@ class TTSManager:
             # **流式处理对话**
             while not self.stop_event.is_set():
                 try:
-                    text_chunk = self.response_queue.get(timeout=2)  # 等待新内容
+                    text_chunk = self.response_queue.get(timeout=5)  # 等待新内容
                     if text_chunk == "[END]":
                         break  # **当前对话结束**
                     tts_request.input_stream.write(text_chunk)  # 🔥 **流式传输新文本**
