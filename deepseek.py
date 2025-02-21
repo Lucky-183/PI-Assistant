@@ -73,7 +73,13 @@ def ask(user_input):
         reply_message = result["choices"][0].get("message")
         if reply_message is None:
             return "没有获取到有效的回复。"
-        messages.append(reply_message)
+        reasoning_response=reply_message.get('reasoning_content', '')
+        if reasoning_response:
+            print(f"reasoning_content:{reasoning_response}")
+        messages.append({
+            "role": reply_message.get("role", ""),
+            "content": reply_message.get("content", "")
+        })
         if len(messages) > 1 and result['usage']['total_tokens'] > 600:
             removed = messages.pop(1)  # 移除第一条非系统消息
             logger.warning("已移除历史记录:", removed)

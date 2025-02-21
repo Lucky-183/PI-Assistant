@@ -54,6 +54,7 @@ def chat_request_stream():
     try:
         response = requests.post(url, headers=headers, json=payload, stream=True, timeout = 30)
         if response.status_code == 200:
+            reasoning_response= ""
             ai_response = ""
             total_tokens = 0
             for chunk in response.iter_lines():
@@ -63,7 +64,10 @@ def chat_request_stream():
                         try:
                             json_data = json.loads(decoded_chunk[6:])
                             if "choices" in json_data and len(json_data["choices"]) > 0:
-                                content = json_data["choices"][0]["delta"].get("content", "")
+                                reasoning_content = json_data["choices"][0]["delta"].get("reasoning_content", "") or ""
+                                print(reasoning_content, end='', flush=True)
+                                reasoning_response += reasoning_content
+                                content = json_data["choices"][0]["delta"].get("content", "") or ""
                                 print(content, end='', flush=True)
                                 ai_response += content
                                 if content.strip():
