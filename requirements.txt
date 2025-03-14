@@ -15,3 +15,5 @@ websocket-client==1.7.0
 paho-mqtt==1.6.1
 loguru==0.7.2
 azure-cognitiveservices-speech==1.42.0
+pvporcupine==3.0.5
+pvrecorder==1.2.5
