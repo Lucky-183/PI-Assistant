@@ -14,6 +14,7 @@ sparkapi_key=''
 #####以上模型提供方三选一,True选择对应的模型,需要填写key######
 
 chat_or_standard=True #采用聊天模式还是标准模式（家庭助手），True为聊天模式（采用流式），详见 prompt_and_deal.py
+#切换模式后需删除 message.data文件（如有），否则会导致对话混乱
 
 ########语音服务(TTS and STT)##########
 use_online_recognize=True #是否采用线上语音识别（效果好，针对优化）
