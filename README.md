@@ -5,6 +5,11 @@
 
 ## 🗺️ 更新日志
 
+### [2025/3/14]
+
+- 添加跨平台的语音唤醒方案 Porcupine ，识别效果更佳
+- 不涉及硬件的功能均可在Windows上运行，运行环境Python3.9及以上
+
 ### [2025/2/20]
 
 - 增加DeepSeek模型选项（由[SiliconFlow](https://cloud.siliconflow.cn/models)提供Api接口）
@@ -239,8 +244,6 @@ python server.py #主程序
 - ‘场景’控制方案重写（描述）为‘自动化’控制方案
 
 - OpenAi/星火模型逐步转向流式输出
-
-- 增加跨平台的语音唤醒方案替代snowboy
 
 - 增加语音合成及识别接口
 
