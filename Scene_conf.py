@@ -24,9 +24,9 @@ def deal_condition(scene):
         config.set(
             Noticenotify=True, timenotify=True, general_volume=0.8, music_volume=0.3
         )
-        play("Sound/goodmorning.raw")
+        play("Sound/goodmorning.wav")
     elif scene == "Night":
-        play("Sound/goodnight.raw")
+        play("Sound/goodnight.wav")
         config.set(
             Noticenotify=False, timenotify=False, general_volume=0.5, music_volume=0.1
         )

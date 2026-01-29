@@ -298,9 +298,9 @@ def play_search_song(words):
         return
     converter('Sound/music_search.mp3','Sound/music_search.wav')
     logger.info(f'来自{back[2]}的{back[1]}')
-    tts.ssml_save(f'来自{back[2]}的,{back[1]}','Sound/musicnotify.raw')
+    tts.wav(f'来自{back[2]}的,{back[1]}','Sound/musicnotify.wav')
     play('Sound/ding.wav')
-    play('Sound/musicnotify.raw')
+    play('Sound/musicnotify.wav')
     time.sleep(2.5)
     musicsound=arcade.Sound('Sound/music_search.wav',streaming=True)
     musicplayer=musicsound.play(volume=config.get("music_volume"))
@@ -345,9 +345,9 @@ def play_advice_music(order):
     if not converter('Sound/music_adv.m4a','Sound/music_adv.wav'):
         return
     logger.info(f"来自{advice[order]['singer']}的{advice[order]['songname']}")
-    tts.ssml_save(f"来自{advice[order]['singer']}的,{advice[order]['songname']}",'Sound/musicnotify.raw')
+    tts.wav(f"来自{advice[order]['singer']}的,{advice[order]['songname']}",'Sound/musicnotify.wav')
     play('Sound/ding.wav')
-    play('Sound/musicnotify.raw')
+    play('Sound/musicnotify.wav')
     time.sleep(2.5)
     musicsound=arcade.Sound('Sound/music_adv.wav',streaming=True)
     musicplayer=musicsound.play(volume=config.get("music_volume"))

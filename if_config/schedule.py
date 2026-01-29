@@ -78,9 +78,9 @@ def if_schedule(text):
             logger.info(Time)
             logger.info(f'已为您设定好{day}日{hour}:{minute}的闹钟,{("事项为"+content) if content != "" else ""}')
             make(Time,content)
-            tts.ssml_save(f'已为您设定好{day}日{hour}点{minute}分的闹钟,{("事项为"+content) if content != "" else ""}','Sound/schedulenotify.raw')
+            tts.wav(f'已为您设定好{day}日{hour}点{minute}分的闹钟,{("事项为"+content) if content != "" else ""}','Sound/schedulenotify.wav')
             play('Sound/ding.wav')
-            play('Sound/schedulenotify.raw')
+            play('Sound/schedulenotify.wav')
             return True
 
         for i in ["后提醒我", "后叫我"]:
@@ -112,9 +112,9 @@ def if_schedule(text):
                 logger.info(Time)
                 logger.info(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你,{("事项为"+content) if content != "" else ""}')
                 make(Time, content)
-                tts.ssml_save(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你,{("事项为"+content) if content != "" else ""}', 'Sound/schedulenotify.raw')
+                tts.wav(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你,{("事项为"+content) if content != "" else ""}', 'Sound/schedulenotify.wav')
                 play('Sound/ding.wav')
-                play('Sound/schedulenotify.raw')
+                play('Sound/schedulenotify.wav')
                 return True
 
         for i in ["时提醒我", "时叫我", "提醒我", "叫我"]:
@@ -158,10 +158,10 @@ def if_schedule(text):
                 logger.info(Time)
                 logger.info(f'将在{hour}点{minute}分时提醒你,{("事项为" + content) if content != "" else ""}')
                 make(Time, content)
-                tts.ssml_save(f'将在{hour}点{minute}分时提醒你,{("事项为" + content) if content != "" else ""}',
-                              'Sound/schedulenotify.raw')
+                tts.wav(f'将在{hour}点{minute}分时提醒你,{("事项为" + content) if content != "" else ""}',
+                              'Sound/schedulenotify.wav')
                 play('Sound/ding.wav')
-                play('Sound/schedulenotify.raw')
+                play('Sound/schedulenotify.wav')
                 return True
 
         for i in ["计时", "倒计时"]:
@@ -192,14 +192,14 @@ def if_schedule(text):
                 logger.info(Time)
                 logger.info(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你')
                 make(Time)
-                tts.ssml_save(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你',
-                              'Sound/schedulenotify.raw')
+                tts.wav(f'将在{time.strftime("%H:%M",time.localtime(int(time.time()) + t))}时提醒你',
+                              'Sound/schedulenotify.wav')
                 play('Sound/ding.wav')
-                play('Sound/schedulenotify.raw')
+                play('Sound/schedulenotify.wav')
                 return True
     except Exception as e:
         logger.warning(e)
-        play('Sound/failclock.raw')
+        play('Sound/failclock.wav')
 
     return False
 
@@ -277,7 +277,7 @@ def make(Time, content=''):
         return [Time,content]
     except Exception as e:
         logger.warning(e)
-        play('Sound/failclock_format.raw')
+        play('Sound/failclock_format.wav')
 # make('2023-8-12 12:34:12','')
 
 def cancel(cls,thing):
@@ -304,11 +304,11 @@ def time_up():
     alter()
 
     logger.info(f'您设定的时间到了,{"" if sql_getlist("*")[0][2] == "" else ("晓晓提醒您:"+sql_getlist("*")[0][2])}')
-    tts.ssml_save(f'您设定的时间到了,{"" if sql_getlist("*")[0][2] == "" else ("晓晓提醒您:"+sql_getlist("*")[0][2])}','Sound/schedulenotify.raw')
+    tts.wav(f'您设定的时间到了,{"" if sql_getlist("*")[0][2] == "" else ("晓晓提醒您:"+sql_getlist("*")[0][2])}','Sound/schedulenotify.wav')
 
     play('Sound/ding.wav')
     play('Sound/ding.wav')
-    play('Sound/schedulenotify.raw')
+    play('Sound/schedulenotify.wav')
 
 
     for i in sql_getlist('time'):

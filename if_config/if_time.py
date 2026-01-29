@@ -17,17 +17,17 @@ def timedetect(text):
     return False
 
 def notifytime():
-    tts.ssml_save(f"当前时间:{time.strftime('%H:%M', time.localtime())}",'Sound/timenotify.raw')
+    tts.wav(f"当前时间:{time.strftime('%H:%M', time.localtime())}",'Sound/timenotify.wav')
     config.set(notify_enable=True)
     play('Sound/ding.wav')
-    play('Sound/timenotify.raw')
+    play('Sound/timenotify.wav')
     config.set(notify_enable=False)
 
 def notifydate():
-    tts.ssml_save(f"今天的日期:{time.strftime('%m月%d号', time.localtime())}",'Sound/timenotify.raw')
+    tts.wav(f"今天的日期:{time.strftime('%m月%d号', time.localtime())}",'Sound/timenotify.wav')
     config.set(notify_enable = True)
     play('Sound/ding.wav')
-    play('Sound/timenotify.raw')
+    play('Sound/timenotify.wav')
     config.set(notify_enable = False)
 
 def admin():
