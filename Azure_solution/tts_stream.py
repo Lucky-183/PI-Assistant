@@ -2,7 +2,7 @@ import azure.cognitiveservices.speech as speechsdk
 import threading
 import pyaudio
 from loguru import logger
-from queue import Empty
+from queue import Empty, Queue
 import time
 from const_config import azure_key
 
@@ -109,3 +109,7 @@ class TTSManager:
             # 🔚 **关闭输入流，结束当前语音播放**
             tts_request.input_stream.close()
 
+response_queue = Queue()
+tts_manager = TTSManager(response_queue)
+tts_thread = threading.Thread(target=tts_manager.start_tts, daemon=True)
+tts_thread.start()

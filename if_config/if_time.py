@@ -1,5 +1,5 @@
 import time
-import tts
+from voice_solution import tts
 from config import config
 from play import play
 from loguru import logger

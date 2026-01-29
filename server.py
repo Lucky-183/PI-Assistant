@@ -14,17 +14,17 @@ from threading import Thread
 import chat
 from config import config
 from const_config import music_enable,schedule_enable,udp_enable,hass_demo_enable
-import if_time
-import tts
+from if_config import if_time
+from voice_solution import tts
 from play import play
 import Scene
 
 if music_enable:
-    import if_music
+    from if_config import if_music
 if schedule_enable:
-    import schedule
+    from if_config import schedule
 if udp_enable:
-    import udpserver
+    from if_config import udpserver
 
 import logging
 logging.getLogger('werkzeug').setLevel(logging.ERROR)
@@ -112,7 +112,7 @@ def speakk():
 
     if config.get('Noticenotify'):
         try:
-            tts.ssml_wav(words,'Sound/notify.wav')
+            tts.wav(words,'Sound/notify.wav')
         except:
             play('Sound/ttserror.wav')
             return 'ok'
@@ -180,7 +180,7 @@ def admin():
                 logger.info('notify time')
                 words=f'整点报时,已经{time.localtime()[3] if time.localtime()[3]<13 else time.localtime()[3]-12}点啦'
                 try:
-                    tts.ssml_wav(words,'Sound/notify.wav')
+                    tts.wav(words,'Sound/notify.wav')
                     if config.get("chat_enable") is False and config.get("notify_enable") is False:
                         config.set(notify_enable = True)
                         play('Sound/ding.wav')

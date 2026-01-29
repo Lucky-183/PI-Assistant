@@ -1,7 +1,7 @@
 
 import time
 import pymysql
-import tts
+from voice_solution import tts
 from threading import Thread
 import time
 import cn2an

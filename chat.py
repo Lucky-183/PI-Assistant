@@ -1,7 +1,7 @@
 import sys
 from const_config import snowboy_enable,gpio_wake_enable,use_online_recognize,\
     music_enable,schedule_enable,use_openai,dev_enable,wlan_enable,\
-    use_spark,use_deepseek,chat_or_standard,porcupine_enable
+    chat_or_standard,porcupine_enable
 
 if snowboy_enable:
     from const_config import snowboypath
@@ -16,39 +16,31 @@ if gpio_wake_enable:
     import RPi.GPIO as GPIO
 
 if use_online_recognize:
-    import azure_reco
+    from voice_solution import reco
 else:
     from voskReco import vosk_reco
 
 if music_enable:   
-    import if_music
+    from if_config import if_music
 
 if schedule_enable:
-    import schedule
+    from if_config import schedule
 
 if dev_enable:
     import dev_control
-    import if_devControl
+    from if_config import if_devControl
 
 if wlan_enable:
     import mqtt_wlan
 
 import speechpoint
 
-from tts import ssml_wav
+from voice_solution import tts
 
 import prompt_and_deal
 
-if use_deepseek:
-    if chat_or_standard:
-        import deepseek_stream_with_tts
-    else:
-        import deepseek
-elif use_openai:
-    import openai
-    import asyncio
-elif use_spark:
-    import sparkApi
+if chat_or_standard:
+    from voice_solution import tts_stream
 
 import os
 
@@ -60,9 +52,9 @@ import time
 
 from config import config
 
-import if_exit
+from if_config import if_exit
 
-import if_time
+from if_config import if_time
 
 from play import play
 
@@ -94,8 +86,8 @@ def hwcallback():
     if running:
         actived = 2  # 运行时激活
         # 运行时激活停止播放声音(流式)
-        if use_deepseek and chat_or_standard is True:
-            deepseek_stream_with_tts.tts_manager.stop_tts()
+        if chat_or_standard is True:
+            tts_stream.tts_manager.stop_tts()
         logger.warning('Conversation was interrupted')
     else:
         actived = 1  # 休眠激活
@@ -124,10 +116,10 @@ def admin():
         # 处理接续对话
         if (not running and not config.get("notify_enable") and 
             (actived == 1 or (next is True and is_sound_playing_complete) or 
-             (next is True and use_deepseek and chat_or_standard and deepseek_stream_with_tts.tts_manager.tts_task
-              and deepseek_stream_with_tts.tts_manager.tts_task.get()))):  #播放完成返回信息(流式)
+             (next is True and chat_or_standard and tts_stream.tts_manager.tts_task
+              and tts_stream.tts_manager.tts_task.get()))):  #播放完成返回信息(流式)
             
-            if use_deepseek and chat_or_standard is True: #为deepseek模型添加延时
+            if chat_or_standard is True: #为deepseek模型添加延时
                 time.sleep(2)
             
             t1 = Thread(target=work)
@@ -211,7 +203,7 @@ def work():
     if allow_running and ( text_enable is False ):
         try:
             if use_online_recognize:
-                text = azure_reco.recognize()
+                text = reco.recognize()
             else:    
                 text = vosk_reco.recognize()+'。'
             logger.info(f"Recongnize result:{text}")
@@ -237,15 +229,7 @@ def work():
             return None
 
         if if_exit.ifexit(text):
-            if use_openai:
-                openai.save()
-            elif use_spark:
-                sparkApi.save()
-            elif use_deepseek:
-                if chat_or_standard:
-                    deepseek_stream_with_tts.save()
-                else:
-                    deepseek.save()
+            prompt_and_deal.save()
             flag = 0
             next = False
             allow_running = True
@@ -332,17 +316,17 @@ def work():
             allow_running = True
             running = False
             
-        if use_deepseek and chat_or_standard and deepseek_stream_with_tts.tts_manager.tts_task:
-            deepseek_stream_with_tts.tts_manager.tts_task.get()
+        if chat_or_standard and tts_stream.tts_manager.tts_task:
+            tts_stream.tts_manager.tts_task.get()
 
-    if allow_running and not (use_deepseek and chat_or_standard):
+    if allow_running and not chat_or_standard:
         try:
             if os.path.exists('Sound/answer.wav'):
                 os.remove('Sound/answer.wav')
             if use_openai:
-                ssml_wav(reply['content'],'Sound/answer.wav')
+                tts.wav(reply['content'],'Sound/answer.wav')
             else:
-                ssml_wav(reply,'Sound/answer.wav')
+                tts.wav(reply,'Sound/answer.wav')
             logger.info('tts complete!')
         except Exception as e:
             logger.warning(e)
@@ -350,7 +334,7 @@ def work():
             allow_running = False
         play('Sound/ding.wav')
 
-    if allow_running and not (use_deepseek and chat_or_standard):
+    if allow_running and not chat_or_standard:
         chatsound = arcade.Sound('Sound/answer.wav')
         chatplayer = chatsound.play()
         time.sleep(0.5)
@@ -443,15 +427,7 @@ def startchat():
     t2.setDaemon(True)
     t2.start()
     #os.system('/home/pi/linkbt.sh')
-    if use_openai:
-        openai.read()
-    elif use_deepseek:
-        if chat_or_standard:
-            deepseek_stream_with_tts.read()
-        else:
-            deepseek.read()
-    elif use_spark:
-        sparkApi.read()
+    prompt_and_deal.read()
     if (snowboy_enable or porcupine_enable) is True and config.get("wakebyhw") is True:
         if snowboy_enable:
             t3 = Thread(target=hotwordBymic.start, args=(hwcallback,))

@@ -1,8 +1,8 @@
 import requests
-import search_func
+from Model.openai import search_func
 import json
 import pickle
-import summary
+from Model.openai import summary
 import os
 from const_config import proxy,openapikey
 from loguru import logger
@@ -138,17 +138,32 @@ def deal():
         return response
     else : return response
 
+def init_system():
+    """
+    初始化系统对话，添加系统提示（可根据需要进行调整）。
+    """
+    from prompt_and_deal import get_system_prompt
+    global messages
+    messages = []
+    system_message = get_system_prompt()
+    messages.append(system_message)
+
 def save():
     if(os.path.exists('message.data')):
         os.remove('message.data')
     with open("message.data", 'wb+') as f:
         pickle.dump(messages, f)
+    logger.info("对话记录已保存。")
 
 def read():
     global messages
-    if(os.path.exists('message.data')):
-        with open("message.data", 'rb+') as f:
-            messages=pickle.load(f)
+    if os.path.exists('message.data'):
+        with open('message.data', "rb+") as f:
+            messages = pickle.load(f)
+        logger.info("对话记录已加载。")
+    else:
+        logger.info("未找到保存的对话记录，初始化新对话。")
+        init_system()
 
 def chat(words):
     ask(words)

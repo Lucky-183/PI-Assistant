@@ -6,14 +6,14 @@ from loguru import logger
 from const_config import use_spark,use_deepseek,use_openai,chat_or_standard
 if use_deepseek:
     if chat_or_standard is True:
-        import deepseek_stream_with_tts
+        from Model.siliconflow import deepseek_stream_with_tts
     else:
-        import deepseek
+        from Model.siliconflow import deepseek
 elif use_openai:
-    import openai
+    from Model.openai import openai
     import asyncio
 elif use_spark:
-    import sparkApi
+    from Model.spark import sparkApi
 
 
 def get_system_prompt():
@@ -182,4 +182,33 @@ def execute_commands(commands):
         if device in status_manager.list_devices():
             status_manager.set_status(**{device: action})
 
+
+def save():
+    """
+    将当前对话记录保存到本地文件，方便后续加载。
+    """
+    if use_openai:
+        openai.save()
+    elif use_spark:
+        sparkApi.save()
+    elif use_deepseek:
+        if chat_or_standard:
+            deepseek_stream_with_tts.save()
+        else:
+            deepseek.save()
+
+
+def read():
+    """
+    从本地文件加载之前保存的对话记录。
+    """
+    if use_openai:
+        openai.read()
+    elif use_deepseek:
+        if chat_or_standard:
+            deepseek_stream_with_tts.read()
+        else:
+            deepseek.read()
+    elif use_spark:
+        sparkApi.read()
 

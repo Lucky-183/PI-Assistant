@@ -4,7 +4,7 @@ import json
 import arcade
 import time
 from pydub import AudioSegment
-import tts
+from voice_solution import tts
 # import dealCookie
 from play import play
 from config import config

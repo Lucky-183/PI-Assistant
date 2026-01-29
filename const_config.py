@@ -18,6 +18,7 @@ chat_or_standard=True #采用聊天模式还是标准模式（家庭助手），
 
 ########语音服务(TTS and STT)##########
 use_online_recognize=True #是否采用线上语音识别（效果好，针对优化）
+voice_solution= "azure"  # 豆包就改成"doubao"
 azure_key=''   #使用线上语音识别需填写 Azrue key
 
 

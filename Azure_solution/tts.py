@@ -12,7 +12,7 @@ header={
 }
 dialog=requests.session()
 
-def ssml_wav(text,filename):
+def wav(text,filename):
     ssml_string=f'''<speak version="1.0" xmlns="http://www.w3.org/2001/10/synthesis"
        xmlns:mstts="https://www.w3.org/2001/mstts" xml:lang="zh-CN">
     <voice name="zh-CN-XiaoxiaoNeural">

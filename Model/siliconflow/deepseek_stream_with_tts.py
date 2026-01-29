@@ -4,9 +4,9 @@ import pickle
 import json
 from const_config import sfapikey
 import threading
-from queue import Queue
 from loguru import logger
-from tts_stream import TTSManager
+from voice_solution import response_queue
+
 
 # DeepSeek API 配置
 url = "https://api.siliconflow.cn/v1/chat/completions"
@@ -14,8 +14,7 @@ key = sfapikey  # 请替换为你的 DeepSeek API Key
 
 # 全局对话记录，保存所有的对话消息（包括系统、用户和 AI 回复）
 messages = []
-response_queue = Queue()
-tts_manager = TTSManager(response_queue)
+
 
 def init_system():
     """
@@ -128,9 +127,6 @@ def read():
         logger.info("未找到保存的对话记录，初始化新对话。")
         init_system()
 
-
-tts_thread = threading.Thread(target=tts_manager.start_tts, daemon=True)
-tts_thread.start()
 
 
 if __name__ == "__main__":
