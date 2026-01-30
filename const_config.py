@@ -21,6 +21,9 @@ use_online_recognize=True #是否采用线上语音识别（效果好，针对�
 voice_solution= "azure"  # 豆包就改成"doubao"
 azure_key=''   #使用线上语音识别需填写 Azrue key
 
+#voice_solution= "doubao"
+doubao_appid = "" # tts设置，参考https://www.volcengine.com/docs/6561/1257584?lang=zh
+doubao_access_token = ""
 
 #########语音唤醒模块(二选一)###########
 snowboy_enable=False #是否加载snowboy模块，需提前安装好

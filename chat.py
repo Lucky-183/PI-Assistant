@@ -114,11 +114,18 @@ def admin():
             config.set(chat_enable=False) 
         
         # 处理接续对话
-        if (not running and not config.get("notify_enable") and 
-            (actived == 1 or (next is True and is_sound_playing_complete) or 
-             (next is True and chat_or_standard and tts_stream.tts_manager.tts_task
-              and tts_stream.tts_manager.tts_task.get()))):  #播放完成返回信息(流式)
-            
+        if (not running and not config.get("notify_enable") and
+                (actived == 1
+                 or (next is True and is_sound_playing_complete)
+                 or (next is True and chat_or_standard and tts_stream.tts_manager.tts_task))):
+
+            # 只有原本会调用 .get() 时才轮询
+            if next is True and chat_or_standard and tts_stream.tts_manager.tts_task:
+                while not tts_stream.tts_manager.tts_task.get():
+                    time.sleep(0.2)
+            #播放完成返回信息(流式)
+
+
             if chat_or_standard is True: #为deepseek模型添加延时
                 time.sleep(2)
             
@@ -315,9 +322,11 @@ def work():
             next = False
             allow_running = True
             running = False
-            
+
         if chat_or_standard and tts_stream.tts_manager.tts_task:
-            tts_stream.tts_manager.tts_task.get()
+            # 轮询等待 tts_task.get() 为 True
+            while not tts_stream.tts_manager.tts_task.get():
+                time.sleep(0.05)  # 每50ms检查一次
 
     if allow_running and not chat_or_standard:
         try:
