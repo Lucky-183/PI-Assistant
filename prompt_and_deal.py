@@ -11,9 +11,9 @@ if use_doubao:
         from Model.doubao import doubao_chat
 if use_deepseek:
     if chat_or_standard is True:
-        from Model.siliconflow import deepseek_stream_with_tts
+        from Model.siliconflow import deepseek_chat_stream
     else:
-        from Model.siliconflow import deepseek
+        from Model.siliconflow import deepseek_chat
 elif use_openai:
     from Model.openai import openai
     import asyncio
@@ -87,7 +87,7 @@ def send(user_input):
         elif use_doubao:
             reply = doubao_chat_stream.ask(user_input)
         elif use_deepseek:
-            reply = deepseek_stream_with_tts.ask(user_input)
+            reply = deepseek_chat_stream.ask(user_input)
         elif use_spark:
             reply = sparkApi.ask(user_input)
         return reply
@@ -109,7 +109,7 @@ def send(user_input):
         elif use_doubao:
             response = doubao_chat.ask(prompt)
         elif use_deepseek:
-            response = deepseek.ask(prompt)
+            response = deepseek_chat.ask(prompt)
         elif use_spark:
             response = sparkApi.ask(prompt)
         logger.info(f"Model response: {response}")
@@ -202,9 +202,9 @@ def save():
         sparkApi.save()
     elif use_deepseek:
         if chat_or_standard:
-            deepseek_stream_with_tts.save()
+            deepseek_chat_stream.save()
         else:
-            deepseek.save()
+            deepseek_chat.save()
     elif use_doubao:
         if chat_or_standard:
             doubao_chat_stream.save()
@@ -220,9 +220,9 @@ def read():
         openai.read()
     elif use_deepseek:
         if chat_or_standard:
-            deepseek_stream_with_tts.read()
+            deepseek_chat_stream.read()
         else:
-            deepseek.read()
+            deepseek_chat.read()
     elif use_doubao:
         if chat_or_standard:
             doubao_chat_stream.read()

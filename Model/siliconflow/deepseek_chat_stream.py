@@ -64,7 +64,7 @@ def chat_request_stream():
                             json_data = json.loads(decoded_chunk[6:])
                             if "choices" in json_data and len(json_data["choices"]) > 0:
                                 reasoning_content = json_data["choices"][0]["delta"].get("reasoning_content", "") or ""
-                                print(reasoning_content, end='', flush=True)
+                                # print(reasoning_content, end='', flush=True)
                                 reasoning_response += reasoning_content
                                 content = json_data["choices"][0]["delta"].get("content", "") or ""
                                 print(content, end='', flush=True)
