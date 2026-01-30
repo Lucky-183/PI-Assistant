@@ -4,7 +4,7 @@ from loguru import logger
 from volcenginesdkarkruntime import Ark
 
 # 从环境变量读取豆包API Key（建议配置到系统环境，也可直接赋值）
-from const_config import ark_api_key  # 对齐你的配置方式，替换为你的ark_api_key
+from const_config import doubao_api_key  # 对齐你的配置方式，替换为你的ark_api_key
 
 # 全局对话记录，保存所有的对话消息（包括系统、用户和AI回复）
 messages = []
@@ -12,7 +12,7 @@ messages = []
 # 初始化豆包Ark客户端（全局单例）
 client = Ark(
     base_url="https://ark.cn-beijing.volces.com/api/v3",
-    api_key=ark_api_key
+    api_key=doubao_api_key
 )
 
 
@@ -76,8 +76,6 @@ def ask(user_input):
             "role": reply_message.role,
             "content": reply_message.content.strip()
         })
-
-
         # 返回AI回复内容
         return reply_message.content.strip()
     except Exception as e:

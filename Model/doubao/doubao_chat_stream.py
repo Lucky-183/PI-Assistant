@@ -5,12 +5,12 @@ from queue import Queue
 from loguru import logger
 from volcenginesdkarkruntime import Ark
 from voice_solution import response_queue
-from const_config import ark_api_key
+from const_config import doubao_api_key
 
 # 初始化豆包Ark客户端（全局单例，流式专用）
 client = Ark(
     base_url="https://ark.cn-beijing.volces.com/api/v3",
-    api_key=ark_api_key
+    api_key=doubao_api_key
 )
 
 messages = []
