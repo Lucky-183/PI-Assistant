@@ -78,7 +78,7 @@ def chat_request_stream():
             response_queue.put("[END]")  # 标记对话结束
             # 将 AI 回复存入上下文
             messages.append({"role": "assistant", "content": ai_response})
-            print('\n')
+            # print('\n')
             # 监测 token 数，清理早期对话
             if len(messages) > 1 and total_tokens > 600:
                 removed = messages.pop(1)  # 移除第一条非系统消息

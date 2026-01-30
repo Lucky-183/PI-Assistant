@@ -1,6 +1,8 @@
 # 用到的端口 3306 mysql 3300 音乐接口 5000 网络交互 6666 udp服务
+use_doubao=True
+doubao_api_key = '' #获取方法参考https://www.volcengine.com/docs/82379/1399008?lang=zh
 
-use_deepseek=True
+use_deepseek=False
 sfapikey=''
 
 use_openai=False #True则使用openai
@@ -18,12 +20,12 @@ chat_or_standard=True #采用聊天模式还是标准模式（家庭助手），
 
 ########语音服务(TTS and STT)##########
 use_online_recognize=True #是否采用线上语音识别（效果好，针对优化）
-voice_solution= "azure"  # 豆包就改成"doubao"
+voice_solution= 'azure'  # 豆包就改成"doubao"
 azure_key=''   #使用线上语音识别需填写 Azrue key
 
 #voice_solution= "doubao"
-doubao_appid = "" # tts设置，参考https://www.volcengine.com/docs/6561/1257584?lang=zh
-doubao_access_token = ""
+doubao_appid = '' # tts设置，参考https://www.volcengine.com/docs/6561/1257584?lang=zh
+doubao_access_token = ''
 
 #########语音唤醒模块(二选一)###########
 snowboy_enable=False #是否加载snowboy模块，需提前安装好

@@ -126,7 +126,7 @@ def admin():
             #播放完成返回信息(流式)
 
 
-            if chat_or_standard is True: #为deepseek模型添加延时
+            if chat_or_standard is True:
                 time.sleep(2)
             
             t1 = Thread(target=work)

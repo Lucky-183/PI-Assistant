@@ -100,7 +100,7 @@
 ### Python模块安装
 
 ```bash
-pip install azure-cognitiveservices-speech loguru requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt 
+pip install azure-cognitiveservices-speech loguru requests arcade RPi.GPIO pydub numpy sounddevice pymysql cn2an duckduckgo_search flask SpeechRecognition openai pyaudio websocket-client paho-mqtt 'volcengine-python-sdk[ark]'
 ```
 
 具体库版本可参考```requirements.txt```文件
